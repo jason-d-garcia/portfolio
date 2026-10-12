@@ -31,11 +31,11 @@ export const projects: Project[] = [
     slug: "moodify",
     name: "Moodify",
     tagline: "Drag a point across a mood map and find songs that feel the way you do.",
-    status: "in-development",
+    status: "live",
     accent: "var(--accent)",
     tags: ["NLP", "BERT", "PyTorch", "Next.js"],
-    demoUrl: "",
-    repoUrl: "https://github.com/jason-d-garcia/bert-lyrics-sentiment-analysis",
+    demoUrl: "https://moodify-navy-three.vercel.app",
+    repoUrl: "https://github.com/jason-d-garcia/moodify",
     problem:
       "Music apps sort by genre and artist, but people usually look for songs by feeling. Moodify places songs on a valence (negative to positive) by arousal (calm to energetic) grid so you can browse by mood directly, with no Spotify login required to explore.",
     exists: [

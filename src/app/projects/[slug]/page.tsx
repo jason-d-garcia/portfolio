@@ -47,7 +47,7 @@ export default async function ProjectPage({ params }: Params) {
 
       <div className="mb-10 overflow-hidden rounded-lg border border-rule bg-paper-2">
         {project.demoUrl ? (
-          <iframe src={project.demoUrl} title={`${project.name} demo`} className="aspect-[4/3] w-full sm:aspect-video" />
+          <iframe src={`${project.demoUrl}?embed`} title={`${project.name} demo`} className="aspect-[4/3] w-full sm:aspect-video" />
         ) : (
           <div className="grid items-center gap-8 p-8 sm:grid-cols-[18rem_1fr]">
             {project.slug === "moodify" && <MoodGrid className="w-full max-w-72 justify-self-center" />}
