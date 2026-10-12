@@ -26,12 +26,12 @@ export const profile = {
   experience: [
     {
       org: "Deloitte",
-      role: "", // TODO: confirm title
+      role: "Discovery 2 Intern",
       detail: "Python automation, analytics pipelines, and AWS Lambda services.",
     },
     {
       org: "Bain & Company",
-      role: "", // TODO: confirm title
+      role: "BEL Intern",
       detail: "Regression modeling for education-sector consulting work.",
     },
     {
