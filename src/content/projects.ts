@@ -67,11 +67,19 @@ export const projects: Project[] = [
     metrics: [
       {
         label: "4-class test accuracy",
-        value: "",
-        source: "Pending re-run of eval.py on the held-out test split.",
+        value: "88.7%",
+        source: "125 of 141 held-out MoodyLyrics songs (about 35 per mood), after retraining on 1,872 cleaned songs.",
+      },
+      {
+        label: "Macro F1",
+        value: "0.887",
+        source: "Per-mood F1 between 0.88 and 0.90. Most common error: relaxed songs predicted as happy (6 of 36).",
       },
     ],
     limitations: [
+      "The test set is small (141 songs), so one song moves a class's score by about 3 points.",
+      "3 test songs have a cover version in the training data, so they are not fully unseen.",
+      "Lyrics were scraped from Genius and still contain some leftover page text and possible wrong-song matches.",
       "Coordinates come from a 4-way classifier, not continuous valence/arousal labels.",
       "Lyrics alone miss mood carried by audio (tempo, timbre, key).",
       "MoodyLyrics labels are derived from word-level lexicon scores, so they are noisy proxies for listener-perceived mood.",
