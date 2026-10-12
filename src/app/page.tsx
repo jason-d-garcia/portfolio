@@ -1,103 +1,59 @@
-import Image from "next/image";
+import { ProjectCard } from "@/components/ProjectCard";
+import { profile } from "@/content/profile";
+import { projects } from "@/content/projects";
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      <section className="py-20 sm:py-28">
+        <p className="font-mono text-xs uppercase tracking-widest text-accent">ML / AI engineering · Summer 2027</p>
+        <h1 className="mt-6 max-w-3xl font-serif text-5xl leading-[1.05] font-semibold tracking-tight sm:text-7xl">
+          {profile.headline}
+        </h1>
+        <p className="mt-8 max-w-2xl text-lg text-ink-soft">{profile.summary}</p>
+      </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <section id="work" className="scroll-mt-8">
+        <h2 className="mb-2 font-mono text-xs uppercase tracking-widest text-ink-soft">Selected work</h2>
+        {projects.map((p, i) => (
+          <ProjectCard key={p.slug} project={p} index={i} />
+        ))}
+        <p className="border-t border-rule pt-6 font-mono text-xs text-ink-soft">More write-ups are on the way.</p>
+      </section>
+
+      <section id="about" className="mt-24 grid scroll-mt-8 gap-12 sm:grid-cols-2">
+        <div>
+          <h2 className="mb-6 font-mono text-xs uppercase tracking-widest text-ink-soft">Experience</h2>
+          <ul className="space-y-6">
+            {profile.experience.map((e) => (
+              <li key={e.org}>
+                <p className="font-serif text-xl font-semibold">
+                  {e.org}
+                  {e.role && <span className="font-sans text-base font-normal text-ink-soft"> · {e.role}</span>}
+                </p>
+                <p className="mt-1 text-ink-soft">{e.detail}</p>
+              </li>
+            ))}
+          </ul>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        <div>
+          <h2 className="mb-6 font-mono text-xs uppercase tracking-widest text-ink-soft">Education</h2>
+          <ul className="space-y-6">
+            {profile.education.map((e) => (
+              <li key={e.degree}>
+                <p className="font-serif text-xl font-semibold">{e.degree}</p>
+                <p className="mt-1 text-ink-soft">{[e.school, e.detail].filter(Boolean).join(" · ")}</p>
+              </li>
+            ))}
+          </ul>
+          <h2 className="mt-12 mb-4 font-mono text-xs uppercase tracking-widest text-ink-soft">Tools</h2>
+          <ul className="flex flex-wrap gap-2 font-mono text-xs">
+            {profile.skills.map((s) => (
+              <li key={s} className="rounded-full border border-rule px-3 py-1 text-ink-soft">{s}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </>
   );
 }
