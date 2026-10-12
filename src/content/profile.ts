@@ -18,7 +18,7 @@ export const profile = {
       detail: "4.0 GPA · expected Dec 2027",
     },
     {
-      school: "", // TODO: confirm school
+      school: "Brigham Young University",
       degree: "B.S. Mathematics",
       detail: "3.84 GPA",
     },
