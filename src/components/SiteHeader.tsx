@@ -11,6 +11,7 @@ export function SiteHeader() {
         <Link href="/#work" className="hover:text-ink">Work</Link>
         <Link href="/#about" className="hover:text-ink">About</Link>
         <a href={profile.links.github} className="hover:text-ink">GitHub</a>
+        <a href={profile.links.linkedin} className="hover:text-ink">LinkedIn</a>
       </nav>
     </header>
   );

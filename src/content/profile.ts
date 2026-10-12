@@ -6,8 +6,8 @@ export const profile = {
     "MS Computer Science student at BYU focused on applied ML, NLP, and research engineering. Looking for Summer 2027 ML/AI engineering internships.",
   links: {
     github: "https://github.com/jason-d-garcia",
+    linkedin: "https://www.linkedin.com/in/jasondgarcia1/",
     // TODO: add once confirmed
-    linkedin: "",
     email: "",
     resume: "",
   },
