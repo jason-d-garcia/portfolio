@@ -24,6 +24,7 @@ export type Project = {
   metrics: Metric[];
   limitations: string[];
   next: string[];
+  credits?: string;
 };
 
 export const projects: Project[] = [
@@ -33,61 +34,70 @@ export const projects: Project[] = [
     tagline: "Drag a point across a mood map and find songs that feel the way you do.",
     status: "live",
     accent: "var(--accent)",
-    tags: ["NLP", "BERT", "PyTorch", "Next.js"],
+    tags: ["NLP", "BERT", "PyTorch", "Regression"],
     demoUrl: "https://moodify-navy-three.vercel.app",
     repoUrl: "https://github.com/jason-d-garcia/moodify",
     problem:
-      "Music apps sort by genre and artist, but people usually look for songs by feeling. Moodify places songs on a valence (negative to positive) by arousal (calm to energetic) grid so you can browse by mood directly, with no Spotify login required to explore.",
+      "Music apps sort by genre and artist, but people usually look for songs by feeling. Moodify places songs on a valence (feels bad to feels good) by arousal (calm to wired) map, cut into 16 emotions from Russell's circumplex model, so you can browse by mood directly. No login needed.",
     exists: [
-      "A bert-base-cased classifier fine-tuned on the MoodyLyrics dataset to predict one of four moods from lyrics: happy, angry, sad, relaxed.",
-      "Training and evaluation pipeline in PyTorch (AdamW, linear decay, 160-token inputs, best checkpoint chosen on validation accuracy).",
+      "A BERT regressor that reads a song's lyrics and predicts valence and arousal directly, trained on 2,044 MERGE songs.",
+      "A live map of 254 held-out test songs the model never saw in training, each with a Spotify link.",
+      "An earlier four-class mood classifier (happy, angry, sad, relaxed) that scores 88.7% on 141 held-out MoodyLyrics songs, kept as the baseline.",
     ],
     approach: [
       {
-        title: "Four moods, two axes",
-        body: "MoodyLyrics labels follow Russell's circumplex model, so each class sits in one quadrant of the valence and arousal plane.",
+        title: "16 emotions, two axes",
+        body: "The map follows Russell's circumplex: valence on x, arousal on y, cut into the 16 emotion words of Feldman Barrett & Russell (1998). A song's emotion is the section its predicted point falls in, and points near the centre are labelled Mixed.",
       },
       {
-        title: "From class probabilities to coordinates",
-        body: "The baseline places each song at the probability-weighted average of its quadrant corners. This is an expected quadrant position, not a supervised continuous estimate, so an uncertain prediction can look neutral.",
+        title: "Baseline: class probabilities to coordinates",
+        body: "The first version placed each song at the probability-weighted average of its four quadrant corners. That is an expected quadrant position, not a continuous estimate. It bunched songs near the diagonals and left 6 of the 16 sections empty.",
         formula: "V = p(happy) + p(relaxed) - p(angry) - p(sad)\nA = p(happy) + p(angry) - p(sad) - p(relaxed)",
       },
       {
+        title: "Direct valence/arousal regression",
+        body: "The current model is bert-base-cased with a two-output tanh head, trained to predict valence and arousal in [-1, 1]. It fills 13 of the 16 sections.",
+      },
+      {
         title: "Retrieval",
-        body: "Song coordinates are precomputed offline. The grid ranks songs by distance to the selected point, so the live site needs no GPU.",
+        body: "Song coordinates are precomputed offline. The map ranks songs by distance to the selected point, so the live site is static and needs no GPU.",
       },
     ],
     architecture: [
-      "Lyrics catalog",
-      "BERT mood classifier (offline)",
-      "Valence/arousal coordinates",
-      "Static catalog",
-      "Interactive grid + Spotify links",
+      "Lyrics (fetched locally)",
+      "BERT valence/arousal regressor (offline)",
+      "Static song catalog",
+      "Interactive mood map + Spotify links",
     ],
     metrics: [
       {
-        label: "4-class test accuracy",
-        value: "88.7%",
-        source: "125 of 141 held-out MoodyLyrics songs (about 35 per mood), after retraining on 1,872 cleaned songs.",
+        label: "Valence correlation",
+        value: "0.70",
+        source: "Pearson r on 256 held-out MERGE songs (R² 0.47, MAE 0.24). Four-class baseline: 0.46.",
       },
       {
-        label: "Macro F1",
-        value: "0.887",
-        source: "Per-mood F1 between 0.88 and 0.90. Most common error: relaxed songs predicted as happy (6 of 36).",
+        label: "Arousal correlation",
+        value: "0.56",
+        source: "Pearson r on the same songs (R² 0.29, MAE 0.19). Four-class baseline: 0.11.",
+      },
+      {
+        label: "Quadrant match",
+        value: "169 / 254",
+        source: "Predicted quadrant matches the tagged quadrant for 67% of the songs shown on the map.",
       },
     ],
     limitations: [
-      "The test set is small (141 songs), so one song moves a class's score by about 3 points.",
-      "3 test songs have a cover version in the training data, so they are not fully unseen.",
-      "Lyrics were scraped from Genius and still contain some leftover page text and possible wrong-song matches.",
-      "Coordinates come from a 4-way classifier, not continuous valence/arousal labels.",
-      "Lyrics alone miss mood carried by audio (tempo, timbre, key).",
-      "MoodyLyrics labels are derived from word-level lexicon scores, so they are noisy proxies for listener-perceived mood.",
+      "MERGE's valence and arousal come from AllMusic mood tags mapped through word norms, not from listeners rating each song, so the target is noisy.",
+      "Predictions are pulled toward the centre, and the Excited and Alert sections hold no songs yet.",
+      "Lyrics only: tempo, key and production are not used.",
+      "The model was starting to overfit by its fifth and final epoch.",
     ],
     next: [
-      "Continuous valence/arousal regression on lyrics.",
-      "Audio features and lyrics + audio fusion, compared against this quadrant baseline.",
+      "Train on a larger set (Deezer) once lyric fetching is set up.",
+      "Add audio features and compare lyrics + audio against lyrics alone.",
     ],
+    credits:
+      "Valence/arousal labels from MERGE (Louro et al., 2024, Zenodo 13939205), licensed CC BY-NC 4.0. Moodify is non-commercial, and lyrics are never stored in the repo.",
   },
 ];
 

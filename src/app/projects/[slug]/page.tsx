@@ -117,6 +117,12 @@ export default async function ProjectPage({ params }: Params) {
           {project.next.map((n) => <li key={n}>{n}</li>)}
         </ul>
       </Section>
+
+      {project.credits && (
+        <Section label="Credits">
+          <p className="text-base text-ink-soft">{project.credits}</p>
+        </Section>
+      )}
     </article>
   );
 }
