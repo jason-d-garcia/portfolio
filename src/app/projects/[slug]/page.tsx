@@ -19,7 +19,7 @@ function Section({ label, children }: { label: string; children: React.ReactNode
   return (
     <section className="grid gap-4 border-t border-rule py-10 sm:grid-cols-[12rem_1fr]">
       <h2 className="font-mono text-xs uppercase tracking-widest text-ink-soft">{label}</h2>
-      <div className="space-y-4 text-lg leading-relaxed">{children}</div>
+      <div className="min-w-0 space-y-4 text-lg leading-relaxed">{children}</div>
     </section>
   );
 }
