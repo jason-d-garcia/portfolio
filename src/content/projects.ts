@@ -112,6 +112,76 @@ export const projects: Project[] = [
     credits:
       "Valence/arousal labels from MERGE (Louro et al., 2024, Zenodo 13939205), licensed CC BY-NC 4.0. senti is non-commercial, and lyrics are never stored in the repo.",
   },
+  {
+    slug: "ballroom",
+    name: "Ballroom style finder",
+    tagline: "Tell which ballroom dance a song fits, to find new music to dance to.",
+    status: "research",
+    accent: "var(--accent)",
+    tags: ["Audio", "MERT", "Foundation models", "PyTorch", "Classification"],
+    demoUrl: "",
+    repoUrl: "https://github.com/jason-d-garcia/ballroom-music-classifier",
+    problem:
+      "Ballroom dancers need music in the right style and tempo, but streaming apps don't tag songs by dance. This model listens to a 30-second clip and reports its three most likely ballroom styles, so a dancer can scan an album or playlist for new practice music.",
+    exists: [
+      "A classifier for 10 styles (cha-cha, foxtrot, jive, paso doble, quickstep, rumba, samba, tango, Viennese waltz, waltz), trained on the 4,180 clips of the Extended Ballroom dataset.",
+      "A command-line tagger that takes a list of titles and artists, fetches 30-second previews, and returns each song's top three styles with probabilities. It also tags local audio files.",
+      "Five baselines on the same split, from zero-shot CLAP to tempo-only and hand-built rhythm features, so the gain from the foundation model is measured rather than assumed.",
+    ],
+    approach: [
+      {
+        title: "Frozen music foundation model",
+        body: "No usable pre-trained ballroom classifier exists, so each clip is embedded by MERT-v1-95M, a self-supervised music model, kept frozen. A small MLP probe learns a weighted mix of MERT's layers and predicts the style. Training takes minutes on a laptop.",
+      },
+      {
+        title: "A split that can't leak",
+        body: "Ballroom datasets repeat songs: 4,110 clips fall into 3,608 duplicate groups, by title and artist, the dataset's own duplicate links, and near-identical audio. The 70/15/15 split keeps every group on one side, so the test set never contains a copy of a training song.",
+      },
+      {
+        title: "Where the rhythm lives",
+        body: "The learned layer weights peak at MERT's middle layers (3 and 7). Single-layer probes peak at layer 4 and fall off at the top layer, so dance style is a rhythm feature that the model's final layers partly discard.",
+      },
+    ],
+    architecture: [
+      "30-second preview or local file",
+      "MERT-v1-95M embeddings (frozen)",
+      "Layer-mixing MLP probe",
+      "Top three styles with probabilities",
+    ],
+    metrics: [
+      {
+        label: "Accuracy",
+        value: "95.6%",
+        source: "MERT + probe on 618 held-out test clips (top-2 98.5%). Published reference: 93.9% (Pavlin et al. 2020), on a different split.",
+      },
+      {
+        label: "Macro-F1",
+        value: "0.947",
+        source: "Same test clips. Weakest classes: rumba 0.90 (often called waltz) and paso doble 0.84, which has only 8 test clips.",
+      },
+      {
+        label: "Best baseline",
+        value: "88.8%",
+        source: "Tempogram + MFCC features with logistic regression on the same split. Tempo alone from the dataset's BPM: 87.4%.",
+      },
+      {
+        label: "Zero-shot CLAP",
+        value: "14.9%",
+        source: "Text prompts with no training. CLAP knows genres but not ballroom dance names.",
+      },
+    ],
+    limitations: [
+      "Extended Ballroom is competition ballroom music. The pop songs dancers actually look for are out of domain, so a small hand-labelled set of real songs is still needed to test the discovery use case.",
+      "Many songs fit several dances (a 120 BPM song in 4/4 can be a foxtrot or a cha-cha), which is why it reports three styles, not one.",
+      "It reads 30-second previews, not whole songs.",
+    ],
+    next: [
+      "Hand-label a set of popular songs dancers use and measure accuracy on them.",
+      "Pose estimation on ballroom dance video, as a follow-on project.",
+    ],
+    credits:
+      "Extended Ballroom dataset (Marchand & Peeters, 2016). MERT-v1-95M (m-a-p). Audio is never stored in the repo.",
+  },
 ];
 
 export const getProject = (slug: string) => projects.find((p) => p.slug === slug);
