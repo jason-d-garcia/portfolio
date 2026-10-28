@@ -43,7 +43,7 @@ export const projects: Project[] = [
       "A BERT regressor that reads a song's lyrics and predicts valence and arousal directly, trained on 2,044 MERGE songs.",
       "A live map of 5,411 Billboard year-end hits (1960-2025), scored over their whole lyric, plus 254 held-out test songs the model never saw in training. Songs play 30-second previews and link to Spotify.",
       "A listener rating mode: people confirm a song's spot or drag it to where it belongs, a third of the time blind to the model's guess. Rated songs move toward the listeners' median placement.",
-      "An audio experiment on the test songs: a frozen music model (MERT) on 30-second clips, blended with the lyrics model. Not yet used on the live map.",
+      "Audio from a frozen music model (MERT) run on each song's 30-second preview and blended with the lyrics score. The 2,568 hits with a preview are placed by the blend, and the rest by lyrics alone.",
       "An earlier four-class mood classifier (happy, angry, sad, relaxed) that scores 88.7% on 141 held-out MoodyLyrics songs, kept as the baseline.",
     ],
     approach: [
@@ -62,7 +62,7 @@ export const projects: Project[] = [
       },
       {
         title: "Adding audio",
-        body: "Each 30-second clip is embedded by MERT-v1-95M, frozen, in 5-second slices. A ridge regression maps the embeddings to valence and arousal, with the layer chosen on validation songs (layer 6). A linear blend of the lyrics and audio scores, fitted on training songs, gives the final position.",
+        body: "Each 30-second clip is embedded by MERT-v1-95M, frozen, in 5-second slices. A ridge regression maps the embeddings to valence and arousal, with the layer chosen on validation songs (layer 6). A linear blend of the lyrics and audio scores, fitted on validation songs, gives the final position. On the live map, the audio comes from each song's Apple preview, scored on a cloud GPU (Modal) in one batch.",
       },
       {
         title: "Retrieval",
@@ -72,6 +72,7 @@ export const projects: Project[] = [
     architecture: [
       "Lyrics (fetched locally)",
       "BERT valence/arousal regressor (offline)",
+      "MERT audio model on 30-second previews (offline, GPU)",
       "Static song catalog",
       "Interactive mood map + Spotify links",
     ],
@@ -87,27 +88,28 @@ export const projects: Project[] = [
         source: "Lyrics model, Pearson r on the same songs (R² 0.36, MAE 0.18). Four-class baseline: 0.11.",
       },
       {
-        label: "Quadrant match",
-        value: "176 / 254",
-        source: "Predicted quadrant matches the tagged quadrant for 69% of the test songs shown on the map.",
-      },
-      {
         label: "Arousal with audio",
         value: "0.61 → 0.77",
         source: "Lyrics + audio vs lyrics alone, Pearson r on the 206 test songs with audio clips (valence 0.72 → 0.77). Paired bootstrap 95% intervals for the gain exclude zero on both axes.",
+      },
+      {
+        label: "Arousal vs listeners",
+        value: "0.57 → 0.85",
+        source: "Lyrics alone vs lyrics + audio, Pearson r against the median placement from 15 study listeners on 100 songs (3+ raters each). Valence: 0.63 → 0.65, a gain within noise.",
       },
     ],
     limitations: [
       "MERGE's valence and arousal come from AllMusic mood tags mapped through word norms, not from listeners rating each song, so the target is noisy.",
       "Predictions are pulled toward the centre. The test songs leave Nervous and Tense empty; with the Billboard hits every section has songs.",
-      "The live map still uses lyrics only. The audio gain is measured on MERGE test songs and hasn't been applied to the catalogue yet.",
-      "Billboard positions are predictions with no labels to check them against, until listener ratings build up.",
+      "2,843 of the 5,411 hits have no Apple preview, so they are still placed by lyrics alone.",
+      "Audio helps arousal far more than valence: with listeners, the blend barely beats lyrics on valence.",
+      "The listener check is small (15 raters, 100 songs), and one rater repeating a song agrees with themself at about r 0.7, so single ratings are noisy too.",
       "The model was starting to overfit by its fifth and final epoch.",
     ],
     next: [
       "Train on a larger set (Deezer) once lyric fetching is set up.",
-      "Score the catalogue's Apple previews with the audio model and blend them into the live map.",
-      "Check lyrics-only and blended scores against listener placements from the rating study.",
+      "Find previews for the hits that lack one, so audio covers the whole map.",
+      "Grow the rating study past 15 listeners and re-check the blend.",
     ],
     credits:
       "Valence/arousal labels from MERGE (Louro et al., 2024, Zenodo 13939205), licensed CC BY-NC 4.0. senti is non-commercial, and lyrics are never stored in the repo.",
