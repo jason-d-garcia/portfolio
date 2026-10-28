@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { featured } from "@/content/featured";
+import { ProjectList } from "@/components/ProjectList";
 import { profile } from "@/content/profile";
 
 function HeroLines({ hidden = false }: { hidden?: boolean }) {
@@ -52,31 +51,9 @@ export default function Home() {
           <h2 className="text-[clamp(2rem,1.3rem+3.2vw,4rem)] leading-none tracking-[-0.02em]">Five projects</h2>
           <p className="max-w-sm text-muted">Two shipped, two in progress and one idea, each labelled as what it is.</p>
         </div>
-        <ul className="mt-14 sm:mt-20">
-          {featured.map((p) => {
-            const body = (
-              <>
-                <span className="block text-[clamp(2.25rem,1.4rem+4vw,5.25rem)] leading-[0.95] tracking-[-0.025em] transition-colors group-hover:text-accent-text">
-                  {p.name}
-                </span>
-                <span className="block max-w-md lg:pt-3">
-                  <span className="block text-base text-accent-text sm:text-lg">{p.status}</span>
-                  <span className="mt-1 block text-muted">{p.tagline}</span>
-                </span>
-              </>
-            );
-            const cls = "grid gap-3 py-6 lg:grid-cols-[1fr_minmax(16rem,28rem)] lg:gap-10 sm:py-8";
-            return (
-              <li key={p.slug} data-reveal>
-                {p.href ? (
-                  <Link href={p.href} className={`group ${cls}`}>{body}</Link>
-                ) : (
-                  <div className={cls}>{body}</div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+        <div className="mt-14 sm:mt-20">
+          <ProjectList />
+        </div>
       </section>
 
       <section className="bg-field-2 px-4 py-28 text-white sm:px-8 sm:py-40">
