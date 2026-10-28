@@ -202,7 +202,6 @@ const allProjects: Project[] = [
     exists: [
       "A battle simulator for scoring generated teams, so each candidate can be played against current meta teams many times.",
       "A pilot evaluation on VGC-Bench that scores a team by its win rate against Regulation M-B meta teams, weighted by how often each meta team is used.",
-      "A faster battle engine in Rust that ports Pokémon Showdown's rules, now being extended to the full Regulation M-B pool.",
     ],
     approach: [
       {
@@ -227,7 +226,7 @@ const allProjects: Project[] = [
       "Win rate depends on the battle agent that plays the teams, so it measures a team as that agent plays it.",
     ],
     next: [
-      "Finish the fast simulator and connect it to the evaluation.",
+      "Finish a faster battle engine in Rust, a port of Pokémon Showdown's rules, for the full Regulation M-B pool, and connect it to the evaluation.",
       "Run MAP-Elites over full teams and report quality and diversity.",
       "Finish the paper. The arXiv link goes here once it is posted.",
     ],
@@ -246,8 +245,8 @@ const allProjects: Project[] = [
     problem:
       "A creator deciding what to post wants to know how a video is likely to do and how sure that guess is. A single predicted view count hides the uncertainty. This project forecasts views with conformal prediction intervals, which cover the true value at a chosen rate on held-out data.",
     exists: [
-      "A benchmark on the public SMP-Video dataset with conformal intervals around each forecast (in review).",
-      "An ingest pipeline for the public TikTok-10M dataset, with leak-free train and test splits and a shared leaderboard (in review).",
+      "Forecasting code and a conformal-interval benchmark for the public SMP-Video dataset.",
+      "Code to load the public TikTok-10M dataset, split it into train and test sets without leaks, and rank models on a shared leaderboard.",
     ],
     approach: [
       {
@@ -269,7 +268,7 @@ const allProjects: Project[] = [
     metrics: [],
     limitations: ["No results yet. Coverage and interval width will be reported once the models are trained."],
     next: [
-      "Ingest TikTok-10M and run the leaderboard.",
+      "Download TikTok-10M and train the first models on it.",
       "Adapt the pretrained model to one creator's account.",
       "Report coverage and interval width on held-out videos.",
     ],
