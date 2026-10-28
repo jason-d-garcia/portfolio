@@ -49,7 +49,7 @@ export default async function ProjectPage({ params }: Params) {
         {project.demoUrl ? (
           <iframe src={`${project.demoUrl}?embed`} title={`${project.name} demo`} className="h-[1400px] w-full min-[820px]:h-[760px]" />
         ) : (
-          <div className="grid items-center gap-8 p-8 sm:grid-cols-[18rem_1fr]">
+          <div className={`grid items-center gap-8 p-8 ${project.slug === "moodify" ? "sm:grid-cols-[18rem_1fr]" : ""}`}>
             {project.slug === "moodify" && <MoodGrid className="w-full max-w-72 justify-self-center" />}
             <div>
               <p className="font-mono text-xs uppercase tracking-widest text-accent">Live demo in progress</p>
