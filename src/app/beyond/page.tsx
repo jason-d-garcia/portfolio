@@ -36,9 +36,10 @@ const groups: { name: string; items: string[] }[] = [
   {
     name: "Service",
     items: [
-      "Volunteer records lead for a regional group of about 5,000 members: helped prepare a boundary proposal and trained 20+ volunteer clerks.",
-      "Organized service projects with 50+ volunteers and served as a volunteer financial auditor.",
-      "Volunteer organist for two years.",
+      "Stake clerk: led a multi-stake boundary proposal affecting about 5,000 members and trained 20+ ward clerks.",
+      "High council: organized temple service projects with 50+ volunteers; financial auditor.",
+      "Sunday School president.",
+      "Temple organist for two years.",
     ],
   },
   {
