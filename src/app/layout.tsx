@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
 import { profile } from "@/content/profile";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const serif = Fraunces({ variable: "--font-face", subsets: ["latin"], axes: ["opsz"], style: ["normal", "italic"] });
@@ -11,6 +12,9 @@ const serif = Fraunces({ variable: "--font-face", subsets: ["latin"], axes: ["op
 export const metadata: Metadata = {
   title: { default: profile.name, template: `%s · ${profile.name}` },
   description: profile.summary,
+  metadataBase: new URL(siteUrl),
+  openGraph: { type: "website", siteName: profile.name, locale: "en_US" },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
