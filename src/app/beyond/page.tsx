@@ -9,7 +9,7 @@ const groups: { name: string; items: string[] }[] = [
   {
     name: "Dance",
     items: [
-      "Competitive ballroom dancer since college; national finalist.",
+      "Competitive ballroom dancer since college, with wins at local competitions.",
       "ISTD Licentiate in International Latin.",
       "Rehearsal assistant for BYU Ballroom Showcase Company, running Standard rehearsals.",
       "Training with a professional coach since 2024.",
@@ -19,7 +19,7 @@ const groups: { name: string; items: string[] }[] = [
     name: "Music",
     items: [
       "Classical piano at performance-program level. I've also taught piano.",
-      "Wrote showdance music for a world-ranked professional Smooth couple.",
+      "Wrote showdance music for Yegor and Tatiana Novikov, a world-ranked professional Smooth couple. They performed it at the Blackpool Dance Festival in 2025.",
       "Arranged an a cappella piece that was recorded as a music video.",
       "Published a piano transcription; 20+ copies sold.",
       "Sang in BYU Men's Chorus and served as VP of Finance for the A Cappella Club.",
