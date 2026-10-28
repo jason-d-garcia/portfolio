@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <>
       <section className="py-20 sm:py-28">
-        <p className="font-mono text-xs uppercase tracking-widest text-accent">ML / AI engineering · Summer 2027</p>
+        <p className="font-mono text-xs uppercase tracking-widest text-accent">Applied ML for learning · Summer 2027</p>
         <h1 className="mt-6 max-w-3xl font-serif text-5xl leading-[1.05] font-semibold tracking-tight sm:text-7xl">
           {profile.headline}
         </h1>
