@@ -12,10 +12,13 @@ export type Project = {
   name: string;
   tagline: string;
   status: ProjectStatus;
+  // Shown after the status, e.g. "Paper in preparation" or a target date.
+  statusNote?: string;
   accent: string;
   tags: string[];
   // Live demo URL. When empty, the page shows a "demo in progress" panel instead of an embed.
   demoUrl: string;
+  // Empty when the code is not public.
   repoUrl: string;
   problem: string;
   exists: string[];
@@ -27,7 +30,7 @@ export type Project = {
   credits?: string;
 };
 
-export const projects: Project[] = [
+const allProjects: Project[] = [
   {
     slug: "moodify",
     name: "senti",
@@ -184,7 +187,119 @@ export const projects: Project[] = [
     credits:
       "Extended Ballroom dataset (Marchand & Peeters, 2016). MERT-v1-95M (m-a-p). Audio is never stored in the repo.",
   },
+  {
+    slug: "vgc-team-generation",
+    name: "VGC team generation",
+    tagline: "Quality-diversity search for Pokémon doubles teams that are strong and different from each other.",
+    status: "in-progress",
+    statusNote: "Paper in preparation",
+    accent: "var(--accent)",
+    tags: ["Evolutionary search", "MAP-Elites", "Simulation", "Rust"],
+    demoUrl: "",
+    repoUrl: "",
+    problem:
+      "In competitive Pokémon doubles (VGC), players bring a team of six under a rule set that changes every few months, and the number of legal teams is enormous. Most players start from teams that already win. We want a search that returns many strong teams that play in different ways, so players can find good ideas outside the current meta.",
+    exists: [
+      "A battle simulator for scoring generated teams, so each candidate can be played against current meta teams many times.",
+      "A pilot evaluation on VGC-Bench that scores a team by its win rate against Regulation M-B meta teams, weighted by how often each meta team is used.",
+    ],
+    approach: [
+      {
+        title: "Quality-diversity search",
+        body: "MAP-Elites keeps an archive of teams sorted into bins by features that describe how a team plays, and keeps only the best team in each bin. The result is a spread of strong teams with different styles, not a single winner.",
+      },
+      {
+        title: "Scored by playing, not by a formula",
+        body: "Each candidate is scored by simulated battles against the teams people actually use, weighted by usage, instead of by a hand-written rating of the team.",
+      },
+    ],
+    architecture: [
+      "Legal Pokémon pool for the format",
+      "Team generator + MAP-Elites archive",
+      "Battle simulator",
+      "Usage-weighted win rate",
+      "Archive of strong, varied teams",
+    ],
+    metrics: [],
+    limitations: [
+      "No results yet. The search has not been run at scale, so there is nothing to report on team quality.",
+      "Win rate depends on the battle agent that plays the teams, so it measures a team as that agent plays it.",
+    ],
+    next: [
+      "Finish a faster battle engine in Rust, a port of Pokémon Showdown's rules, for the full Regulation M-B pool, and connect it to the evaluation.",
+      "Run MAP-Elites over full teams and report quality and diversity.",
+      "Finish the paper. The arXiv link goes here once it is posted.",
+    ],
+    credits: "Built with Bryce Martin as a Computational Creativity class project.",
+  },
+  {
+    slug: "tiktok-conformal",
+    name: "TikTok forecasting",
+    tagline: "Forecasting a video's views with conformal intervals that say how sure the model is.",
+    status: "in-progress",
+    statusNote: "First results targeted for Dec 2026",
+    accent: "var(--accent)",
+    tags: ["Forecasting", "Conformal prediction", "Uncertainty", "Python"],
+    demoUrl: "",
+    repoUrl: "",
+    problem:
+      "A creator deciding what to post wants to know how a video is likely to do and how sure that guess is. A single predicted view count hides the uncertainty. This project forecasts views with conformal prediction intervals, which cover the true value at a chosen rate on held-out data.",
+    exists: [
+      "Forecasting code and a conformal-interval benchmark for the public SMP-Video dataset.",
+      "Code to load the public TikTok-10M dataset, split it into train and test sets without leaks, and rank models on a shared leaderboard.",
+    ],
+    approach: [
+      {
+        title: "Pretrain on public data, then adapt",
+        body: "Models train first on public TikTok data (SMP-Video and TikTok-10M), then adapt to a single creator's account, where there are far fewer videos to learn from.",
+      },
+      {
+        title: "Conformal intervals",
+        body: "Conformal prediction wraps any point forecast in an interval, calibrated on held-out videos so it covers the true view count at a rate you choose, without assumptions about the model.",
+      },
+    ],
+    architecture: [
+      "Public TikTok datasets",
+      "Leak-free splits",
+      "Forecasting model",
+      "Conformal calibration",
+      "Forecast with an interval",
+    ],
+    metrics: [],
+    limitations: ["No results yet. Coverage and interval width will be reported once the models are trained."],
+    next: [
+      "Download TikTok-10M and train the first models on it.",
+      "Adapt the pretrained model to one creator's account.",
+      "Report coverage and interval width on held-out videos.",
+    ],
+  },
+  {
+    slug: "tutoring-assistant",
+    name: "Tutoring assistant",
+    tagline: "An idea for a tutor that pays attention to how students see themselves as learners.",
+    status: "concept",
+    accent: "var(--accent)",
+    tags: ["Learning science", "LLMs", "Concept"],
+    demoUrl: "",
+    repoUrl: "",
+    problem:
+      "How students see themselves as learners shapes what they are willing to try. Most tutoring software tracks which answers a student gets right, not whether they believe they can learn the material. I want to build a tutor that pays attention to both, because every student deserves a fair chance to learn.",
+    exists: [],
+    approach: [
+      {
+        title: "What it would do",
+        body: "Notice signs of how a student sees themself as a learner during a session and adjust the help it gives, alongside the usual work on the material.",
+      },
+    ],
+    architecture: [],
+    metrics: [],
+    limitations: ["This is a concept. Nothing is built yet."],
+    next: ["Read the research on learner identity in tutoring.", "Sketch a small prototype to test the idea."],
+  },
 ];
+
+const order = ["moodify", "vgc-team-generation", "tiktok-conformal", "ballroom", "tutoring-assistant"];
+export const projects: Project[] = order.map((slug) => allProjects.find((p) => p.slug === slug)!);
 
 export const getProject = (slug: string) => projects.find((p) => p.slug === slug);
 
@@ -195,3 +310,5 @@ export const statusLabel: Record<ProjectStatus, string> = {
   concept: "Concept",
   research: "Research",
 };
+
+export const statusText = (p: Project) => [statusLabel[p.status], p.statusNote].filter(Boolean).join(" · ");
