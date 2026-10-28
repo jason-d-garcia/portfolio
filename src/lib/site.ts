@@ -6,9 +6,10 @@ export const siteUrl = process.env.SITE_URL ?? "https://jasondgarcia.com";
 // The resume link appears only once public/resume.pdf is added. Checked at build time.
 export const hasResume = existsSync(join(process.cwd(), "public", "resume.pdf"));
 
-export const nav = [
+export const nav: { label: string; short?: string; href: string }[] = [
   { label: "Projects", href: "/projects" },
   { label: "Research", href: "/research" },
   { label: "About", href: "/about" },
   ...(hasResume ? [{ label: "Resume", href: "/resume" }] : []),
+  { label: "Beyond work", short: "Beyond", href: "/beyond" },
 ];
