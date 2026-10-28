@@ -1,4 +1,4 @@
-export type ProjectStatus = "live" | "in-development" | "research";
+export type ProjectStatus = "live" | "shipped" | "in-progress" | "concept" | "research";
 
 export type Metric = {
   label: string;
@@ -118,7 +118,7 @@ export const projects: Project[] = [
     slug: "ballroom",
     name: "Ballroom style finder",
     tagline: "Tell which ballroom dance a song fits, to find new music to dance to.",
-    status: "research",
+    status: "shipped",
     accent: "var(--accent)",
     tags: ["Audio", "MERT", "Foundation models", "PyTorch", "Classification"],
     demoUrl: "",
@@ -190,6 +190,8 @@ export const getProject = (slug: string) => projects.find((p) => p.slug === slug
 
 export const statusLabel: Record<ProjectStatus, string> = {
   live: "Live demo",
-  "in-development": "In development",
+  shipped: "Shipped",
+  "in-progress": "In progress",
+  concept: "Concept",
   research: "Research",
 };

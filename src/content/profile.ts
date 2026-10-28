@@ -27,21 +27,25 @@ export const profile = {
     {
       org: "The Church of Jesus Christ of Latter-day Saints",
       role: "Data Science Intern",
+      when: "Sep 2026 – now",
       detail: "Analytics and Power BI reporting for Meetinghouse & Facilities, since September 2026.",
     },
     {
       org: "Deloitte",
       role: "Discovery 2 Intern",
+      when: "",
       detail: "Python automation, analytics pipelines, and AWS Lambda services.",
     },
     {
       org: "Bain & Company",
       role: "BEL Intern",
+      when: "",
       detail: "Regression modeling for education-sector consulting work.",
     },
     {
       org: "Juni Learning",
       role: "Senior Instructor",
+      when: "2020 – now",
       detail:
         "Taught 3,000+ mathematics and programming lessons. Wrote the on-demand Minecraft digital logic course, the platform's third most popular, and trained new instructors on the Instructor Success Team.",
     },

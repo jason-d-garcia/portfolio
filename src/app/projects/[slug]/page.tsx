@@ -29,7 +29,7 @@ export default async function ProjectPage({ params }: Params) {
   if (!project) notFound();
 
   return (
-    <article>
+    <article className="mx-auto max-w-5xl px-4 sm:px-8">
       <header className="py-16 sm:py-20">
         <Link href="/#work" className="font-mono text-xs uppercase tracking-widest text-ink-soft hover:text-ink">
           ← All work

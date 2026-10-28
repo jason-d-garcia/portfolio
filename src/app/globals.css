@@ -1,47 +1,132 @@
 @import "tailwindcss";
 
+/* Light: paper and ink. Dark: charcoal. Poster fields are the same in both. */
 :root {
-  --paper: #f4f1ea;
-  --paper-2: #ebe6da;
-  --ink: #16140f;
-  --ink-soft: #5b564b;
-  --rule: #d6cfbf;
-  --accent: #e2552b;
-  --accent-2: #2b6be2;
+  --bg: #f2f2f0;
+  --surface: #e4e4e1;
+  --ink: #141414;
+  --muted: #555555;
+  --accent: #0c7866;
+  --accent-ink: #ffffff;
+  --field-1: #d71e1e;
+  --field-2: #1e4bd7;
+  --field-3: #0c7866;
+  --field-4: #ffe927;
+  --field-4-ink: #111111;
+  --hero-top-ink: #0c7866;
+  --accent-text: #0a6a5a;
+
+  /* Legacy names still used by the project template until M2. */
+  --paper: var(--bg);
+  --paper-2: var(--surface);
+  --ink-soft: var(--muted);
+  --rule: var(--surface);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #12110e;
-    --paper-2: #1c1a16;
-    --ink: #f1ece1;
-    --ink-soft: #a39d90;
-    --rule: #34302a;
-    --accent: #ff7a4d;
-    --accent-2: #6f9dff;
+    --bg: #191919;
+    --surface: #262626;
+    --ink: #ffffff;
+    --muted: #a3a3a3;
+    --hero-top-ink: #ffffff;
+    --accent-text: #4cc9ae;
   }
 }
 
 @theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-text: var(--accent-text);
+  --color-field-1: var(--field-1);
+  --color-field-2: var(--field-2);
+  --color-field-3: var(--field-3);
+  --color-field-4: var(--field-4);
+  --color-field-4-ink: var(--field-4-ink);
   --color-paper: var(--paper);
   --color-paper-2: var(--paper-2);
-  --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-rule: var(--rule);
-  --color-accent: var(--accent);
-  --color-accent-2: var(--accent-2);
-  --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
-  --font-mono: var(--font-mono);
+  --font-serif: var(--font-face), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-face), Georgia, serif;
+  --font-mono: ui-monospace, monospace;
+}
+
+html {
+  background: var(--bg);
 }
 
 body {
-  background: var(--paper);
+  background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-face), Georgia, "Times New Roman", serif;
+  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--paper);
+  background: var(--field-4);
+  color: var(--field-4-ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.mark {
+  padding: 0 0.1em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Masked headline: each line rises from behind its own baseline. */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+.line-mask > span {
+  display: block;
+  animation: line-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.line-mask:nth-child(2) > span {
+  animation-delay: 110ms;
+}
+.fade-up {
+  animation: fade-up 700ms cubic-bezier(0.16, 1, 0.3, 1) 450ms both;
+}
+@keyframes line-rise {
+  from { transform: translateY(105%); }
+  to { transform: translateY(0); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Section entrances, added by <Reveal>. Content stays visible without script. */
+.js [data-reveal] > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.js [data-reveal].is-in > * {
+  opacity: 1;
+  transform: none;
+}
+.js [data-reveal].is-in > *:nth-child(2) { transition-delay: 80ms; }
+.js [data-reveal].is-in > *:nth-child(3) { transition-delay: 160ms; }
+.js [data-reveal].is-in > *:nth-child(4) { transition-delay: 240ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .line-mask > span, .fade-up { animation: none; }
+  .js [data-reveal] > * { opacity: 1; transform: none; transition: none; }
 }
