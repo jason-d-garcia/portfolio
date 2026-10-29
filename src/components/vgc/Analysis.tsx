@@ -1,7 +1,7 @@
 "use client";
 
 import type { PoolIndex } from "@/lib/vgc/pool";
-import { TYPE_COLORS, battleForm, calcStats, defensiveMultiplier, effectiveness } from "@/lib/vgc/pool";
+import { TYPE_COLORS, battleForm, calcStats, defensiveMultiplier, effectiveness, inkOn } from "@/lib/vgc/pool";
 import type { Problem } from "@/lib/vgc/sets";
 import type { Team } from "@/lib/vgc/types";
 import { Sprite, TypeBadge } from "./bits";
@@ -58,6 +58,7 @@ export function Analysis({ pool, team, problems }: { pool: PoolIndex; team: Team
                     <span className="flex justify-center">
                       <Sprite sprite={m.form.sprite} name={m.form.name} size={32} />
                     </span>
+                    <span className="sr-only">{m.form.name}</span>
                   </th>
                 ))}
                 <th className="font-normal text-muted" title="Members weak to this type">
@@ -121,7 +122,7 @@ export function Analysis({ pool, team, problems }: { pool: PoolIndex; team: Team
                 key={c.def}
                 title={c.by ? `${fmt(c.best) || "1"}× with ${c.by}` : "No attacking move hits this type"}
                 className="flex items-center gap-1 rounded-sm px-1.5 py-0.5"
-                style={{ background: c.best > 1 ? TYPE_COLORS[c.def] : "transparent", color: c.best > 1 ? "white" : undefined, outline: c.best > 1 ? undefined : "1px dashed var(--muted)" }}
+                style={{ background: c.best > 1 ? TYPE_COLORS[c.def] : "transparent", color: c.best > 1 ? inkOn(TYPE_COLORS[c.def]) : undefined, outline: c.best > 1 ? undefined : "1px dashed var(--muted)" }}
               >
                 {c.def}
                 <span className="tabular-nums">{c.best > 1 ? `${c.best}×` : c.best === 0 ? "—" : c.best < 1 ? "½" : "1×"}</span>

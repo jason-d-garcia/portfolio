@@ -60,7 +60,8 @@ export function SlotCard({ pool, index, slot, selected, hasProblem, onSelect, on
           {index + 1}
           {hasProblem && (
             <span className="ml-1 text-field-1" title="This slot has a problem; see the checks below.">
-              ●
+              <span aria-hidden>●</span>
+              <span className="sr-only">Has a rule problem</span>
             </span>
           )}
         </span>

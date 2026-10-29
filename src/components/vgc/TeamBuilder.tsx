@@ -33,6 +33,8 @@ export function TeamBuilder() {
   const [busy, setBusy] = useState(false);
   const [suggesterId, setSuggesterId] = useState(suggesters[0].id);
   const restored = useRef(false);
+  // Slot whose set was edited last; consecutive edits to it share one undo step.
+  const lastEdit = useRef<number | null>(null);
 
   useEffect(() => {
     loadPool().then(setPool, (e: Error) => setError(e.message));
@@ -52,11 +54,16 @@ export function TeamBuilder() {
     if (t) setTeamState(t);
   }, [pool]);
 
+
   useEffect(() => {
     if (!pool || !restored.current) return;
+    const code = encodeTeam(team);
     try {
-      window.localStorage.setItem(STORAGE_KEY, encodeTeam(team));
+      window.localStorage.setItem(STORAGE_KEY, code);
     } catch {}
+    // A share link in the address bar goes stale once the team changes; drop it so a reload keeps the latest team.
+    const shared = new URLSearchParams(window.location.hash.slice(1)).get("t");
+    if (shared && shared !== code) window.history.replaceState(null, "", window.location.pathname + window.location.search);
   }, [pool, team]);
 
   const problems = useMemo(() => (pool ? validateTeam(pool, team) : []), [pool, team]);
@@ -70,9 +77,10 @@ export function TeamBuilder() {
     );
   if (!pool) return <p className="animate-pulse rounded-md bg-surface p-8 font-sans text-muted">Loading the Reg M-B Pokémon…</p>;
 
-  const setTeam = (next: Team | ((t: Team) => Team), say?: string) => {
+  const setTeam = (next: Team | ((t: Team) => Team), say?: string, editSlot: number | null = null) => {
     const t = typeof next === "function" ? next(team) : next;
-    setHistory((h) => [...h.slice(-29), team]);
+    if (editSlot === null || lastEdit.current !== editSlot) setHistory((h) => [...h.slice(-29), team]);
+    lastEdit.current = editSlot;
     setTeamState(t);
     if (say) setStatus(say);
   };
@@ -109,12 +117,13 @@ export function TeamBuilder() {
     setSelected(to);
   };
 
-  const update = (i: number, set: PokemonSet) => setTeam((t) => t.map((s, j) => (j === i ? { ...s, set } : s)));
+  const update = (i: number, set: PokemonSet) => setTeam((t) => t.map((s, j) => (j === i ? { ...s, set } : s)), undefined, i);
 
   const undo = () => {
     const prev = history.at(-1);
     if (!prev) return;
     setHistory((h) => h.slice(0, -1));
+    lastEdit.current = null;
     setTeamState(prev);
     setStatus("Undone.");
   };

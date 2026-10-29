@@ -120,7 +120,10 @@ export function remoteSuggester(url: string): TeamSuggester {
       if (!r.ok) throw new Error(`The team search service answered ${r.status}.`);
       const body = (await r.json()) as { suggestions: Suggestion[] };
       // Never let the service change a locked slot.
-      return body.suggestions.map((s) => ({ ...s, team: s.team.map((slot, i) => (req.team[i]?.locked ? req.team[i] : { ...slot, locked: false })) }));
+      return body.suggestions.map((s) => ({
+        ...s,
+        team: req.team.map((mine, i) => (mine.locked ? mine : { set: s.team?.[i]?.set ?? null, locked: false })),
+      }));
     },
   };
 }

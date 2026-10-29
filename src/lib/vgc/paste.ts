@@ -1,7 +1,7 @@
 import type { PoolIndex } from "./pool";
 import { toID } from "./pool";
 import type { PokemonSet, Stats, Team } from "./types";
-import { STAT_IDS, STAT_LABELS, TEAM_SIZE } from "./types";
+import { SP_PER_STAT, STAT_IDS, STAT_LABELS, TEAM_SIZE } from "./types";
 
 // Showdown's team text format. Stat Points go on the "EVs:" line, as the Champions formats on Showdown expect.
 export function exportSet(pool: PoolIndex, set: PokemonSet): string {
@@ -101,17 +101,19 @@ export function decodeTeam(pool: PoolIndex, code: string): Team | null {
     if (rows.length !== TEAM_SIZE) return null;
     return rows.map((r) => {
       if (!r) return { set: null, locked: false };
-      const [species, ability, item, moves, nature, sp, locked] = r.split("~");
-      if (!pool.byId.has(species)) return { set: null, locked: false };
+      const [species, ability, item, moves, nature, sp = "", locked] = r.split("~");
+      const s = pool.byId.get(species);
+      if (!s) return { set: null, locked: false };
       const nums = sp.split(".").map(Number);
+      // Links can be hand-edited or come from an older pool, so keep only values that are legal now.
       return {
         set: {
           species,
-          ability,
-          item,
-          moves: moves ? moves.split(".") : [],
-          nature,
-          sp: Object.fromEntries(STAT_IDS.map((s, i) => [s, nums[i] || 0])) as Stats,
+          ability: s.abilities.includes(ability) ? ability : s.abilities[0],
+          item: item && pool.items[item] ? item : "",
+          moves: (moves ? moves.split(".") : []).filter((m) => s.moves.includes(m)).slice(0, 4),
+          nature: pool.natures[nature] ? nature : "serious",
+          sp: Object.fromEntries(STAT_IDS.map((st, i) => [st, Math.max(0, Math.min(SP_PER_STAT, Math.floor(nums[i]) || 0))])) as Stats,
         },
         locked: locked === "1",
       };

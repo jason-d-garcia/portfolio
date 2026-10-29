@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import type { PoolIndex } from "@/lib/vgc/pool";
-import { TYPE_COLORS, spriteUrl } from "@/lib/vgc/pool";
+import { TYPE_COLORS, inkOn, spriteUrl } from "@/lib/vgc/pool";
 import type { Species } from "@/lib/vgc/types";
 
 export function TypeBadge({ type, small }: { type: string; small?: boolean }) {
   return (
     <span
-      className={`inline-block rounded-sm font-sans uppercase tracking-wide text-white ${small ? "px-1 text-[0.6rem] leading-4" : "px-1.5 text-[0.7rem] leading-5"}`}
-      style={{ background: TYPE_COLORS[type] ?? "#777" }}
+      className={`inline-block rounded-sm font-sans uppercase tracking-wide ${small ? "px-1 text-[0.6rem] leading-4" : "px-1.5 text-[0.7rem] leading-5"}`}
+      style={{ background: TYPE_COLORS[type] ?? "#777777", color: inkOn(TYPE_COLORS[type] ?? "#777777") }}
     >
       {type}
     </span>
