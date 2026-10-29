@@ -20,6 +20,8 @@ export type Project = {
   demoUrl: string;
   // Empty when the code is not public.
   repoUrl: string;
+  // A tool hosted on this site, e.g. "/vgc", linked from the project page.
+  tool?: { href: string; label: string };
   problem: string;
   exists: string[];
   approach: { title: string; body: string; formula?: string }[];
@@ -197,6 +199,7 @@ const allProjects: Project[] = [
     tags: ["Evolutionary search", "MAP-Elites", "Simulation", "Rust"],
     demoUrl: "",
     repoUrl: "",
+    tool: { href: "/vgc", label: "Open the team builder" },
     problem:
       "In competitive Pokémon doubles (VGC), players bring a team of six under a rule set that changes every few months, and the number of legal teams is enormous. Most players start from teams that already win. We want a search that returns many strong teams that play in different ways, so players can find good ideas outside the current meta.",
     exists: [
@@ -226,6 +229,7 @@ const allProjects: Project[] = [
       "Win rate depends on the battle agent that plays the teams, so it measures a team as that agent plays it.",
     ],
     next: [
+      "Connect the genetic search to the team builder, so it fills the slots a player leaves unlocked.",
       "Finish a faster battle engine in Rust, a port of Pokémon Showdown's rules, for the full Regulation M-B pool, and connect it to the evaluation.",
       "Run MAP-Elites over full teams and report quality and diversity.",
       "Finish the paper. The arXiv link goes here once it is posted.",

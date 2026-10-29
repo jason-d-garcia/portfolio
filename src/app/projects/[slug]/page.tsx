@@ -46,8 +46,13 @@ export default async function ProjectPage({ params }: Params) {
         <h1 className="mt-10 text-[clamp(3rem,1.6rem+7vw,8.5rem)] leading-[0.92] tracking-[-0.03em]">{project.name}</h1>
         <p className="mt-6 text-lg text-accent-text sm:text-xl">{statusText(project)}</p>
         <p className="mt-3 max-w-2xl text-[clamp(1.25rem,1.1rem+0.7vw,1.625rem)] leading-snug">{project.tagline}</p>
-        {(project.demoUrl || project.repoUrl) && (
+        {(project.demoUrl || project.repoUrl || project.tool) && (
           <div className="mt-10 flex flex-wrap gap-3">
+            {project.tool && (
+              <Link href={project.tool.href} className="inline-flex h-12 items-center bg-accent px-6 text-lg text-accent-ink transition-transform hover:-translate-y-0.5">
+                {project.tool.label} →
+              </Link>
+            )}
             {project.demoUrl && (
               <a href={project.demoUrl} className="inline-flex h-12 items-center bg-accent px-6 text-lg text-accent-ink transition-transform hover:-translate-y-0.5">
                 Open the demo ↗
