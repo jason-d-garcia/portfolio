@@ -246,11 +246,13 @@ const allProjects: Project[] = [
     tags: ["Forecasting", "Conformal prediction", "Uncertainty", "Python"],
     demoUrl: "",
     repoUrl: "",
+    tool: { href: "/creator-studio", label: "Try the draft comparison" },
     problem:
       "A creator deciding what to post wants to know how a video is likely to do and how sure that guess is. A single predicted view count hides the uncertainty. This project forecasts views with conformal prediction intervals, which cover the true value at a chosen rate on held-out data.",
     exists: [
       "Forecasting code and a conformal-interval benchmark for the public SMP-Video dataset.",
       "Code to load the public TikTok-10M dataset, split it into train and test sets without leaks, and rank models on a shared leaderboard.",
+      "A draft comparison tool that ranks versions of a post by predicted views, running on a placeholder predictor until the model is trained.",
     ],
     approach: [
       {
