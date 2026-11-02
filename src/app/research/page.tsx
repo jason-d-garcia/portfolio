@@ -20,14 +20,16 @@ export default function ResearchPage() {
           <h2 className="text-[clamp(2rem,1.3rem+3.2vw,4rem)] leading-[1] tracking-[-0.02em]">Quality-diversity search for VGC teams</h2>
           <p>
             We use MAP-Elites to search for Pokémon doubles teams that are both strong and different from each other. Each team is
-            scored by simulated battles against the teams players actually use, weighted by how often they appear. The battle
-            simulator and a pilot evaluation are built; the search has not been run at scale, so there are no results yet.
+            scored by simulated battles against the teams players actually use, weighted by how often they appear. A Rust battle
+            engine, built by AI coding agents under my direction and validated against Pokémon Showdown (99.5-100% of outcomes
+            match, at 30-45x the speed), and a pilot evaluation are done; the search has not yet run at scale, so there are no
+            archive results until early December.
           </p>
           <p className="text-muted">
             {arxivUrl ? (
               <a href={arxivUrl} className="underline underline-offset-4 hover:text-ink">Read the paper on arXiv ↗</a>
             ) : (
-              "The arXiv link will be posted here once the paper is out."
+              "The paper is in progress. A link will appear here once it is public."
             )}
           </p>
           <p>

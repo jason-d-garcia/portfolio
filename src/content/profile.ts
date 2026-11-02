@@ -7,8 +7,7 @@ export const profile = {
   links: {
     github: "https://github.com/jason-d-garcia",
     linkedin: "https://www.linkedin.com/in/jasondgarcia1/",
-    // TODO: add once confirmed
-    email: "",
+    email: "jason@jasondgarcia.com",
     resume: "",
   },
   education: [
@@ -25,29 +24,29 @@ export const profile = {
   ],
   experience: [
     {
+      org: "Juni Learning",
+      role: "Senior Instructor",
+      when: "2020 – now",
+      detail:
+        "Taught 3,000+ mathematics and programming lessons. Wrote the on-demand Minecraft digital logic course, the platform's third most popular, and trained new instructors on the Instructor Success Team.",
+    },
+    {
       org: "The Church of Jesus Christ of Latter-day Saints",
       role: "Data Science Intern",
       when: "Sep 2026 – now",
       detail: "Analytics and Power BI reporting for Meetinghouse & Facilities, since September 2026.",
     },
     {
+      org: "Bain & Company",
+      role: "Externship, education nonprofit client",
+      when: "",
+      detail: "Regression modeling for an education-sector consulting engagement.",
+    },
+    {
       org: "Deloitte",
-      role: "Discovery 2 Intern",
+      role: "Consulting intern",
       when: "",
       detail: "Python automation, analytics pipelines, and AWS Lambda services.",
-    },
-    {
-      org: "Bain & Company",
-      role: "BEL Intern",
-      when: "",
-      detail: "Regression modeling for education-sector consulting work.",
-    },
-    {
-      org: "Juni Learning",
-      role: "Senior Instructor",
-      when: "2020 – now",
-      detail:
-        "Taught 3,000+ mathematics and programming lessons. Wrote the on-demand Minecraft digital logic course, the platform's third most popular, and trained new instructors on the Instructor Success Team.",
     },
   ],
   skills: ["Python", "PyTorch", "BERT / NLP", "XGBoost", "SHAP", "Clustering", "SQL", "AWS", "TypeScript", "Next.js"],

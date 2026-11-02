@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { Fraunces } from "next/font/google";
+import { Fraunces, Inter_Tight, JetBrains_Mono } from "next/font/google";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Reveal } from "@/components/Reveal";
@@ -9,6 +9,8 @@ import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const serif = Fraunces({ variable: "--font-face", subsets: ["latin"], axes: ["opsz"], style: ["normal", "italic"] });
+const sans = Inter_Tight({ variable: "--font-sans-face", subsets: ["latin"] });
+const mono = JetBrains_Mono({ variable: "--font-mono-face", subsets: ["latin"], weight: ["400"] });
 
 export const metadata: Metadata = {
   title: { default: profile.name, template: `%s · ${profile.name}` },
@@ -21,7 +23,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" id="top">
-      <body className={`${serif.variable} antialiased`}>
+      <body className={`${serif.variable} ${sans.variable} ${mono.variable} antialiased`}>
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:bg-bg focus:p-2">
           Skip to content
         </a>

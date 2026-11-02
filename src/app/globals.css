@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
-/* Light: paper and ink. Dark: charcoal. Poster fields are the same in both. */
+/* Light: paper and ink. Dark: charcoal. Poster fields are the same in both.
+   Two fields carry the site (yellow, blue) plus one accent (teal). --field-1 (red) is kept only for error
+   states inside the tools; it is not used on the pages. */
 :root {
   --bg: #f2f2f0;
   --surface: #e4e4e1;
@@ -52,8 +54,8 @@
   --color-ink-soft: var(--ink-soft);
   --color-rule: var(--rule);
   --font-serif: var(--font-face), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-face), Georgia, serif;
-  --font-mono: ui-monospace, monospace;
+  --font-sans: var(--font-sans-face), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, "SF Mono", Menlo, monospace;
 }
 
 html {

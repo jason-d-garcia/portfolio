@@ -22,6 +22,10 @@ export type Project = {
   repoUrl: string;
   // A tool hosted on this site, e.g. "/vgc", linked from the project page.
   tool?: { href: string; label: string };
+  // One sentence of evidence for lists: the headline number, or what is done when there is none yet.
+  result?: string;
+  // Optional figure for the notebook grid and the project page header. Omit until a real export exists.
+  figure?: { src: string; alt: string; caption: string; source: string };
   problem: string;
   exists: string[];
   approach: { title: string; body: string; formula?: string }[];
@@ -42,6 +46,7 @@ const allProjects: Project[] = [
     tags: ["NLP", "BERT", "Audio", "PyTorch", "Regression"],
     demoUrl: "https://moodify-navy-three.vercel.app",
     repoUrl: "https://github.com/jason-d-garcia/senti",
+    result: "Lyrics + audio model: r = 0.72 valence, 0.77 arousal on held-out songs; 0.85 against 15 listeners.",
     problem:
       "Music apps sort by genre and artist, but people usually look for songs by feeling. senti (formerly Moodify) places songs on a valence (feels bad to feels good) by arousal (calm to wired) map, cut into 16 emotions from Russell's circumplex model, so you can browse by mood directly. No login needed.",
     exists: [
@@ -128,6 +133,7 @@ const allProjects: Project[] = [
     tags: ["Audio", "MERT", "Foundation models", "PyTorch", "Classification"],
     demoUrl: "",
     repoUrl: "https://github.com/jason-d-garcia/ballroom-music-classifier",
+    result: "95.6% accuracy on 618 held-out clips across 10 styles; best non-foundation baseline 88.8%.",
     problem:
       "Ballroom dancers need music in the right style and tempo, but streaming apps don't tag songs by dance. This model listens to a 30-second clip and reports its three most likely ballroom styles, so a dancer can scan an album or playlist for new practice music.",
     exists: [
@@ -200,11 +206,13 @@ const allProjects: Project[] = [
     demoUrl: "",
     repoUrl: "",
     tool: { href: "/vgc", label: "Open the team builder" },
+    result: "Rust battle engine matches Pokémon Showdown on 99.5-100% of outcomes at 30-45x its speed. Archive results targeted for early Dec 2026.",
     problem:
       "In competitive Pokémon doubles (VGC), players bring a team of six under a rule set that changes every few months, and the number of legal teams is enormous. Most players start from teams that already win. We want a search that returns many strong teams that play in different ways, so players can find good ideas outside the current meta.",
     exists: [
-      "A battle simulator for scoring generated teams, so each candidate can be played against current meta teams many times.",
+      "A Rust battle engine that ports Pokémon Showdown's rules for the full Regulation M-B pool. I directed AI coding agents to build it and validated it against Showdown: 99.5-100% of simulated outcomes match, at 30-45x Showdown's speed, so each candidate team can be played against meta teams many times.",
       "A pilot evaluation on VGC-Bench that scores a team by its win rate against Regulation M-B meta teams, weighted by how often each meta team is used.",
+      "A team builder on this site that checks a team's legality and suggests fills for unlocked slots.",
     ],
     approach: [
       {
@@ -219,20 +227,31 @@ const allProjects: Project[] = [
     architecture: [
       "Legal Pokémon pool for the format",
       "Team generator + MAP-Elites archive",
-      "Battle simulator",
+      "Rust battle engine (validated against Showdown)",
       "Usage-weighted win rate",
       "Archive of strong, varied teams",
     ],
-    metrics: [],
+    metrics: [
+      {
+        label: "Engine agreement with Showdown",
+        value: "99.5–100%",
+        source: "Share of simulated battle outcomes that match Pokémon Showdown on the same inputs, across the validation runs reported in the Nov 2026 project update. Archive results (team quality and diversity) are not in yet.",
+      },
+      {
+        label: "Engine speed",
+        value: "30–45x",
+        source: "Battles per second relative to Pokémon Showdown on the same hardware, same validation runs.",
+      },
+    ],
     limitations: [
-      "No results yet. The search has not been run at scale, so there is nothing to report on team quality.",
+      "No search results yet. MAP-Elites has not been run at scale, so there is nothing to report on team quality or diversity until early December.",
       "Win rate depends on the battle agent that plays the teams, so it measures a team as that agent plays it.",
+      "The engine was built by AI coding agents under my direction; the validation against Showdown is what I stand behind, not every line of the port.",
     ],
     next: [
       "Connect the genetic search to the team builder, so it fills the slots a player leaves unlocked.",
-      "Finish a faster battle engine in Rust, a port of Pokémon Showdown's rules, for the full Regulation M-B pool, and connect it to the evaluation.",
-      "Run MAP-Elites over full teams and report quality and diversity.",
-      "Finish the paper. The arXiv link goes here once it is posted.",
+      "Run MAP-Elites over full teams on the Rust engine and report quality and diversity (target: early Dec 2026).",
+      "Write up the method and results as a paper.",
     ],
     credits: "Built with Bryce Martin as a Computational Creativity class project.",
   },
@@ -241,18 +260,20 @@ const allProjects: Project[] = [
     name: "TikTok forecasting",
     tagline: "Forecasting a video's views with conformal intervals that say how sure the model is.",
     status: "in-progress",
-    statusNote: "First results targeted for Dec 2026",
+    statusNote: "Multimodal results targeted for late Nov 2026",
     accent: "var(--accent)",
     tags: ["Forecasting", "Conformal prediction", "Uncertainty", "Python"],
     demoUrl: "",
     repoUrl: "",
     tool: { href: "/creator-studio", label: "Try the draft comparison" },
+    result: "Mondrian conformal intervals cover 91% of held-out view counts at a 90% target on a 204K-post leakage-safe benchmark.",
     problem:
       "A creator deciding what to post wants to know how a video is likely to do and how sure that guess is. A single predicted view count hides the uncertainty. This project forecasts views with conformal prediction intervals, which cover the true value at a chosen rate on held-out data.",
     exists: [
-      "Forecasting code and a conformal-interval benchmark for the public SMP-Video dataset.",
-      "Code to load the public TikTok-10M dataset, split it into train and test sets without leaks, and rank models on a shared leaderboard.",
-      "A draft comparison tool that ranks versions of a post by predicted views, running on a placeholder predictor until the model is trained.",
+      "A leakage-safe benchmark of 204K public TikTok posts, split so that no information from after a post's upload leaks into its forecast.",
+      "A first forecaster of views at upload time, wrapped in Mondrian conformal intervals that are calibrated by group so small creators get honest coverage too.",
+      "Code to load the public TikTok-10M dataset and rank models on a shared leaderboard.",
+      "A draft comparison tool on this site that ranks versions of a post by predicted views, running on a placeholder predictor until the trained model is wired in.",
     ],
     approach: [
       {
@@ -260,8 +281,8 @@ const allProjects: Project[] = [
         body: "Models train first on public TikTok data (SMP-Video and TikTok-10M), then adapt to a single creator's account, where there are far fewer videos to learn from.",
       },
       {
-        title: "Conformal intervals",
-        body: "Conformal prediction wraps any point forecast in an interval, calibrated on held-out videos so it covers the true view count at a rate you choose, without assumptions about the model.",
+        title: "Conformal intervals, grouped",
+        body: "Conformal prediction wraps any point forecast in an interval, calibrated on held-out videos so it covers the true view count at a rate you choose, without assumptions about the model. Mondrian conformal calibrates each creator-size group separately, so coverage holds for small creators and not only on average.",
       },
     ],
     architecture: [
@@ -271,12 +292,21 @@ const allProjects: Project[] = [
       "Conformal calibration",
       "Forecast with an interval",
     ],
-    metrics: [],
-    limitations: ["No results yet. Coverage and interval width will be reported once the models are trained."],
+    metrics: [
+      {
+        label: "Interval coverage",
+        value: "91%",
+        source: "Mondrian conformal intervals at a 90% target, on the held-out split of the 204K-post benchmark, including the small-creator group. From the Nov 2026 project update.",
+      },
+    ],
+    limitations: [
+      "Interval width is not reported yet; coverage alone can be met with wide intervals, so width on the same split comes with the multimodal results.",
+      "The current forecaster does not yet use the video or caption content; the multimodal version is in progress.",
+    ],
     next: [
-      "Download TikTok-10M and train the first models on it.",
+      "Add video and caption features and report coverage and width together (target: late Nov 2026).",
       "Adapt the pretrained model to one creator's account.",
-      "Report coverage and interval width on held-out videos.",
+      "Wire the trained model into the draft comparison tool.",
     ],
   },
   {

@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { DemoEmbed } from "@/components/DemoEmbed";
+import { FigureTile } from "@/components/FigureTile";
 import { MoodGrid } from "@/components/MoodGrid";
-import { getProject, projects, statusText } from "@/content/projects";
+import { StatusBadge } from "@/components/StatusBadge";
+import { getProject, projects } from "@/content/projects";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -43,23 +46,24 @@ export default async function ProjectPage({ params }: Params) {
         <Link href="/projects" className="text-muted underline-offset-4 hover:text-ink hover:underline">
           ← All projects
         </Link>
-        <h1 className="mt-10 text-[clamp(3rem,1.6rem+7vw,8.5rem)] leading-[0.92] tracking-[-0.03em]">{project.name}</h1>
-        <p className="mt-6 text-lg text-accent-text sm:text-xl">{statusText(project)}</p>
+        <h1 className="mt-8 text-[clamp(2.75rem,1.6rem+4.5vw,6rem)] leading-[0.95] tracking-[-0.03em]">{project.name}</h1>
+        <StatusBadge project={project} className="mt-5 text-base" />
         <p className="mt-3 max-w-2xl text-[clamp(1.25rem,1.1rem+0.7vw,1.625rem)] leading-snug">{project.tagline}</p>
+        {project.result && <p className="mt-4 max-w-[60ch] font-sans text-muted">{project.result}</p>}
         {(project.demoUrl || project.repoUrl || project.tool) && (
           <div className="mt-10 flex flex-wrap gap-3">
             {project.tool && (
-              <Link href={project.tool.href} className="inline-flex h-12 items-center bg-accent px-6 text-lg text-accent-ink transition-transform hover:-translate-y-0.5">
+              <Link href={project.tool.href} className="inline-flex h-12 items-center bg-accent px-6 font-sans text-base text-accent-ink transition-transform hover:-translate-y-0.5">
                 {project.tool.label} →
               </Link>
             )}
             {project.demoUrl && (
-              <a href={project.demoUrl} className="inline-flex h-12 items-center bg-accent px-6 text-lg text-accent-ink transition-transform hover:-translate-y-0.5">
+              <a href={project.demoUrl} className="inline-flex h-12 items-center bg-accent px-6 font-sans text-base text-accent-ink transition-transform hover:-translate-y-0.5">
                 Open the demo ↗
               </a>
             )}
             {project.repoUrl && (
-              <a href={project.repoUrl} className="inline-flex h-12 items-center bg-surface px-6 text-lg transition-transform hover:-translate-y-0.5">
+              <a href={project.repoUrl} className="inline-flex h-12 items-center bg-surface px-6 font-sans text-base transition-transform hover:-translate-y-0.5">
                 Read the code ↗
               </a>
             )}
@@ -67,14 +71,23 @@ export default async function ProjectPage({ params }: Params) {
         )}
       </header>
 
+      {project.figure && (
+        <div className="px-4 pb-4 sm:px-8">
+          <div className="max-w-5xl">
+            <FigureTile project={project} priority />
+          </div>
+        </div>
+      )}
+
       {project.demoUrl ? (
         <div data-ui className="bg-surface px-4 py-8 sm:px-8">
-          <iframe
-            src={`${project.demoUrl}?embed`}
-            title={`${project.name} live demo`}
-            loading="lazy"
-            className="h-[1400px] w-full bg-bg min-[820px]:h-[760px]"
-          />
+          <DemoEmbed url={project.demoUrl} name={project.name}>
+            {project.slug === "moodify" ? (
+              <MoodGrid className="w-full max-w-md" />
+            ) : (
+              <FigureTile project={project} />
+            )}
+          </DemoEmbed>
         </div>
       ) : (
         project.slug === "moodify" && (
@@ -117,18 +130,28 @@ export default async function ProjectPage({ params }: Params) {
       </div>
 
       {project.metrics.length > 0 && (
-        <section data-reveal className="bg-field-2 px-4 py-16 text-white sm:px-8 sm:py-24">
-          <h2 className="text-[clamp(2rem,1.3rem+3.2vw,4rem)] leading-none tracking-[-0.02em]">Results</h2>
-          <dl className="mt-12 grid gap-x-10 gap-y-12 sm:grid-cols-2">
-            {project.metrics.map((m) => (
-              <div key={m.label}>
-                <dt className="text-lg">{m.label}</dt>
-                <dd className="mt-1 text-[clamp(2.5rem,1.6rem+3.5vw,4.5rem)] leading-none tracking-[-0.02em] tabular-nums">{m.value}</dd>
-                <dd className="mt-3 max-w-[48ch] text-[#dbe3ff]">{m.source}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
+        <div className="px-4 sm:px-8">
+          <Section label="Results">
+            <table className="w-full border-collapse text-left">
+              <thead className="font-sans text-sm text-muted">
+                <tr className="border-b border-surface">
+                  <th scope="col" className="py-2 pr-4 font-normal">Metric</th>
+                  <th scope="col" className="py-2 pr-4 font-normal">Value</th>
+                  <th scope="col" className="py-2 font-normal">Measured on</th>
+                </tr>
+              </thead>
+              <tbody>
+                {project.metrics.map((m) => (
+                  <tr key={m.label} className="border-b border-surface align-top">
+                    <th scope="row" className="py-4 pr-4 font-normal">{m.label}</th>
+                    <td className="py-3 pr-4 text-[1.75rem] leading-none tracking-[-0.02em] whitespace-nowrap tabular-nums text-accent-text">{m.value}</td>
+                    <td className="py-4 font-sans text-sm leading-snug text-muted">{m.source}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Section>
+        </div>
       )}
 
       <div className="px-4 pb-24 sm:px-8">
