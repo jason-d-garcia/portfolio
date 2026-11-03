@@ -20,6 +20,8 @@ export type Project = {
   demoUrl: string;
   // Empty when the code is not public.
   repoUrl: string;
+  // A write-up hosted on this site or elsewhere, e.g. "/papers/senti.pdf".
+  paperUrl?: string;
   // A tool hosted on this site, e.g. "/vgc", linked from the project page.
   tool?: { href: string; label: string };
   problem: string;
@@ -42,6 +44,7 @@ const allProjects: Project[] = [
     tags: ["NLP", "BERT", "Audio", "PyTorch", "Regression"],
     demoUrl: "https://moodify-navy-three.vercel.app",
     repoUrl: "https://github.com/jason-d-garcia/senti",
+    paperUrl: "/papers/senti.pdf",
     problem:
       "Music apps sort by genre and artist, but people usually look for songs by feeling. senti (formerly Moodify) places songs on a valence (feels bad to feels good) by arousal (calm to wired) map, cut into 16 emotions from Russell's circumplex model, so you can browse by mood directly. No login needed.",
     exists: [
