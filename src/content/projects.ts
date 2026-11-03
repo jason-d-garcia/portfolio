@@ -46,7 +46,7 @@ const allProjects: Project[] = [
     tags: ["NLP", "BERT", "Audio", "PyTorch", "Regression"],
     demoUrl: "https://moodify-navy-three.vercel.app",
     repoUrl: "https://github.com/jason-d-garcia/senti",
-    result: "Lyrics + audio model: r = 0.72 valence, 0.77 arousal on held-out songs; 0.85 against 15 listeners.",
+    result: "Lyrics + audio model: r = 0.77 valence, 0.77 arousal on 206 held-out songs; arousal r = 0.85 against 15 listeners.",
     problem:
       "Music apps sort by genre and artist, but people usually look for songs by feeling. senti (formerly Moodify) places songs on a valence (feels bad to feels good) by arousal (calm to wired) map, cut into 16 emotions from Russell's circumplex model, so you can browse by mood directly. No login needed.",
     exists: [

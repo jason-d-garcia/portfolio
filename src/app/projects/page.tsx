@@ -24,7 +24,7 @@ export default function ProjectsPage() {
           </p>
         </div>
         <p className="max-w-xs font-sans text-sm leading-snug text-muted">
-          Two shipped, two in progress and one idea, each labelled as what it is. Numbers link to the split they came from.
+          Two shipped, two in progress and one idea, each labelled as what it is. Each number names the data it was measured on.
         </p>
       </div>
 

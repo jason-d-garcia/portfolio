@@ -32,9 +32,11 @@ export default function Home() {
                 Resume
               </Link>
             )}
-            <a href={`mailto:${profile.links.email}`} className="inline-flex h-12 items-center border border-field-4-ink/40 px-6 text-base hover:border-field-4-ink">
-              Email
-            </a>
+            {profile.links.email && (
+              <a href={`mailto:${profile.links.email}`} className="inline-flex h-12 items-center border border-field-4-ink/40 px-6 text-base hover:border-field-4-ink">
+                Email
+              </a>
+            )}
           </div>
         </div>
       </section>

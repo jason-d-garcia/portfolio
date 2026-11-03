@@ -132,20 +132,21 @@ export default async function ProjectPage({ params }: Params) {
       {project.metrics.length > 0 && (
         <div className="px-4 sm:px-8">
           <Section label="Results">
-            <table className="w-full border-collapse text-left">
-              <thead className="font-sans text-sm text-muted">
+            {/* Three columns from sm up; on phones each row stacks (label and value, then the source). */}
+            <table className="w-full border-collapse text-left max-sm:block">
+              <thead className="font-sans text-sm text-muted max-sm:sr-only">
                 <tr className="border-b border-surface">
                   <th scope="col" className="py-2 pr-4 font-normal">Metric</th>
                   <th scope="col" className="py-2 pr-4 font-normal">Value</th>
                   <th scope="col" className="py-2 font-normal">Measured on</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="max-sm:block">
                 {project.metrics.map((m) => (
-                  <tr key={m.label} className="border-b border-surface align-top">
-                    <th scope="row" className="py-4 pr-4 font-normal">{m.label}</th>
-                    <td className="py-3 pr-4 text-[1.75rem] leading-none tracking-[-0.02em] whitespace-nowrap tabular-nums text-accent-text">{m.value}</td>
-                    <td className="py-4 font-sans text-sm leading-snug text-muted">{m.source}</td>
+                  <tr key={m.label} className="border-b border-surface align-top max-sm:grid max-sm:grid-cols-[1fr_auto] max-sm:gap-x-4 max-sm:py-4">
+                    <th scope="row" className="py-4 pr-4 font-normal max-sm:block max-sm:py-0 max-sm:pr-0">{m.label}</th>
+                    <td className="py-3 pr-4 text-[1.75rem] leading-none tracking-[-0.02em] whitespace-nowrap tabular-nums text-accent-text max-sm:block max-sm:py-0 max-sm:pr-0">{m.value}</td>
+                    <td className="py-4 font-sans text-sm leading-snug text-muted max-sm:col-span-2 max-sm:block max-sm:pt-2 max-sm:pb-0">{m.source}</td>
                   </tr>
                 ))}
               </tbody>

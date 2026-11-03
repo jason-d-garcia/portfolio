@@ -1,16 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /* The live demo loads only when asked, so the page never shows a blank iframe while a third-party app wakes up. */
 export function DemoEmbed({ url, name, children }: { url: string; name: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
+  const frame = useRef<HTMLIFrameElement>(null);
+
+  // The button unmounts on open, so move focus to the demo rather than letting it fall back to <body>.
+  useEffect(() => {
+    if (open) frame.current?.focus();
+  }, [open]);
 
   if (open) {
     return (
       <iframe
+        ref={frame}
         src={`${url}?embed`}
         title={`${name} live demo`}
+        tabIndex={-1}
         className="h-[1400px] w-full bg-bg min-[820px]:h-[760px]"
       />
     );
@@ -27,7 +35,12 @@ export function DemoEmbed({ url, name, children }: { url: string; name: string; 
         >
           Load the live demo here
         </button>
-        <a href={url} className="inline-flex h-12 items-center bg-bg px-6 font-sans text-base transition-transform hover:-translate-y-0.5">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex h-12 items-center bg-bg px-6 font-sans text-base transition-transform hover:-translate-y-0.5"
+        >
           Open in a new tab ↗
         </a>
       </div>
