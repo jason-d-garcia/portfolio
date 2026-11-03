@@ -7,8 +7,7 @@ export const profile = {
   links: {
     github: "https://github.com/jason-d-garcia",
     linkedin: "https://www.linkedin.com/in/jasondgarcia1/",
-    // TODO: add once confirmed
-    email: "",
+    email: "jason@jasondgarcia.com",
     resume: "",
   },
   education: [
@@ -25,6 +24,13 @@ export const profile = {
   ],
   experience: [
     {
+      org: "Juni Learning",
+      role: "Senior Instructor",
+      when: "2020 – now",
+      detail:
+        "Taught 3,000+ mathematics and programming lessons. Wrote the on-demand Minecraft digital logic course, the platform's third most popular, and trained new instructors on the Instructor Success Team.",
+    },
+    {
       org: "The Church of Jesus Christ of Latter-day Saints",
       role: "Data Science Intern",
       when: "Sep 2026 – now",
@@ -32,22 +38,15 @@ export const profile = {
     },
     {
       org: "Deloitte",
-      role: "Discovery 2 Intern",
-      when: "",
-      detail: "Python automation, analytics pipelines, and AWS Lambda services.",
+      role: "Discovery Intern (early-career program)",
+      when: "Jun – Aug 2023",
+      detail: "Found 3-4x higher cancellations for short-notice appointments in scheduling data, driving an estimated $6M in annual savings.",
     },
     {
       org: "Bain & Company",
-      role: "BEL Intern",
-      when: "",
-      detail: "Regression modeling for education-sector consulting work.",
-    },
-    {
-      org: "Juni Learning",
-      role: "Senior Instructor",
-      when: "2020 – now",
-      detail:
-        "Taught 3,000+ mathematics and programming lessons. Wrote the on-demand Minecraft digital logic course, the platform's third most popular, and trained new instructors on the Instructor Success Team.",
+      role: "BEL Sophomore Program, education nonprofit client",
+      when: "May 2023",
+      detail: "Traced high first-year withdrawals for an education nonprofit to 2 of 20+ charter schools using regressions on survey data.",
     },
   ],
   skills: ["Python", "PyTorch", "BERT / NLP", "XGBoost", "SHAP", "Clustering", "SQL", "AWS", "TypeScript", "Next.js"],
