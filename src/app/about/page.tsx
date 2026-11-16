@@ -18,9 +18,10 @@ export default function AboutPage() {
         </p>
         <h2 className="pt-6 text-[clamp(1.5rem,1.2rem+1vw,2rem)] leading-tight">What I care about</h2>
         <p>
-          Learning. Every student deserves a fair chance to learn, and good tools can make that chance more equal. I build machine
-          learning that people can use, and I try to measure it honestly: what it gets right, where it fails and what I
-          haven&rsquo;t tested yet.
+          Learning. Every student deserves a fair chance to learn, and good tools can make that chance more equal. That interest
+          came before machine learning: six years of teaching at Juni, and an externship at Bain &amp; Company on an
+          education-nonprofit engagement. Now I build machine learning that people can use, and I try to measure it honestly: what
+          it gets right, where it fails and what I haven&rsquo;t tested yet.
         </p>
         <h2 className="pt-6 text-[clamp(1.5rem,1.2rem+1vw,2rem)] leading-tight">What I&rsquo;m looking for</h2>
         <p>
