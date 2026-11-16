@@ -3,9 +3,18 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DemoEmbed } from "@/components/DemoEmbed";
 import { FigureTile } from "@/components/FigureTile";
-import { MoodGrid } from "@/components/MoodGrid";
+import { BallroomBaselines } from "@/components/demos/BallroomBaselines";
+import { ConformalCoverage } from "@/components/demos/ConformalCoverage";
+import { HookLiftChart } from "@/components/demos/HookLiftChart";
+import { MoodMapSample } from "@/components/demos/MoodMapSample";
 import { StatusBadge } from "@/components/StatusBadge";
-import { getProject, projects } from "@/content/projects";
+import { getProject, projects, type DemoKey } from "@/content/projects";
+
+const demos: Record<DemoKey, () => React.ReactNode> = {
+  "hook-lift": () => <HookLiftChart />,
+  "conformal-coverage": () => <ConformalCoverage />,
+  "ballroom-baselines": () => <BallroomBaselines />,
+};
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -88,7 +97,7 @@ export default async function ProjectPage({ params }: Params) {
         <div data-ui className="bg-surface px-4 py-8 sm:px-8">
           <DemoEmbed url={project.demoUrl} name={project.name}>
             {project.slug === "moodify" ? (
-              <MoodGrid className="w-full max-w-md" />
+              <MoodMapSample />
             ) : (
               <FigureTile project={project} />
             )}
@@ -97,7 +106,7 @@ export default async function ProjectPage({ params }: Params) {
       ) : (
         project.slug === "moodify" && (
           <div className="bg-surface px-4 py-10 sm:px-8">
-            <MoodGrid className="mx-auto w-full max-w-md" />
+            <MoodMapSample />
           </div>
         )
       )}
@@ -134,9 +143,19 @@ export default async function ProjectPage({ params }: Params) {
         )}
       </div>
 
-      {project.metrics.length > 0 && (
+      {(project.metrics.length > 0 || project.findings?.length) && (
         <div className="px-4 sm:px-8">
           <Section label="Results">
+            {project.findings?.map((f) => (
+              <div key={f.title} className="pb-6">
+                <h3 className="text-xl font-medium">{f.title}</h3>
+                <p className="mt-2">{f.body}</p>
+                {f.demo && <div className="mt-6 border-t border-surface pt-6">{demos[f.demo]()}</div>}
+              </div>
+            ))}
+            {project.findings?.length && project.metrics.length > 0 ? (
+              <h3 className="pt-4 text-xl font-medium">In numbers</h3>
+            ) : null}
             {/* Three columns from sm up; on phones each row stacks (label and value, then the source). */}
             <table className="w-full border-collapse text-left max-sm:block">
               <thead className="font-sans text-sm text-muted max-sm:sr-only">
