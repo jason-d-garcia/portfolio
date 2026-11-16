@@ -7,6 +7,11 @@ export type Metric = {
   source: string;
 };
 
+// Interactive charts rendered inside a Results finding. Keys map to client components in the project page.
+export type DemoKey = "hook-lift" | "conformal-coverage" | "ballroom-baselines";
+
+export type Finding = { title: string; body: string; demo?: DemoKey };
+
 export type Project = {
   slug: string;
   name: string;
@@ -32,6 +37,8 @@ export type Project = {
   exists: string[];
   approach: { title: string; body: string; formula?: string }[];
   architecture: string[];
+  // Results told as findings, in order, before the metrics table. Every number in them needs a source too.
+  findings?: Finding[];
   metrics: Metric[];
   limitations: string[];
   next: string[];
@@ -164,6 +171,13 @@ const allProjects: Project[] = [
       "Layer-mixing MLP probe",
       "Top three styles with probabilities",
     ],
+    findings: [
+      {
+        title: "The foundation model beats every baseline",
+        body: "Tempo alone gets far when the tempo label is exact, and hand-built rhythm features get further. The frozen MERT model with a small probe is the only one past 90%. Switch between accuracy and macro-F1: the order holds for both.",
+        demo: "ballroom-baselines",
+      },
+    ],
     metrics: [
       {
         label: "Accuracy",
@@ -261,55 +275,112 @@ const allProjects: Project[] = [
   {
     slug: "tiktok-conformal",
     name: "TikTok forecasting",
-    tagline: "Forecasting a video's views with conformal intervals that say how sure the model is.",
+    tagline: "Which kinds of videos do better than a creator's usual, and how sure can a forecast be?",
     status: "in-progress",
-    statusNote: "Multimodal results targeted for late Nov 2026",
+    statusNote: "Write-up targeted for Dec 2026",
     accent: "var(--accent)",
-    tags: ["Forecasting", "Conformal prediction", "Uncertainty", "Python"],
+    tags: ["Forecasting", "Conformal prediction", "CLIP", "PyTorch", "Python"],
     demoUrl: "",
     repoUrl: "",
     tool: { href: "/creator-studio", label: "Try the draft comparison" },
-    result: "Mondrian conformal intervals cover 91% of held-out view counts at a 90% target on a 204K-post leakage-safe benchmark.",
+    result: "Some opening types do 1.2-1.4x a creator's usual views across 1,637 creators; a personal model for one creator spots breakouts at AUC ~0.85.",
     problem:
-      "A creator deciding what to post wants to know how a video is likely to do and how sure that guess is. A single predicted view count hides the uncertainty. This project forecasts views with conformal prediction intervals, which cover the true value at a chosen rate on held-out data.",
+      "A creator deciding what to post wants to know two things: what tends to do well, and how sure any forecast is. This started as a CS 580 class project that predicted a post's views. I rebuilt it to measure what kinds of content beat a creator's own norm, to forecast with intervals that say how sure they are, and to test whether a model fit to one creator's history does better than a general one.",
     exists: [
-      "A leakage-safe benchmark of 204K public TikTok posts, split so that no information from after a post's upload leaks into its forecast.",
-      "A first forecaster of views at upload time, wrapped in Mondrian conformal intervals that are calibrated by group so small creators get honest coverage too.",
-      "Code to load the public TikTok-10M dataset and rank models on a shared leaderboard.",
-      "A draft comparison tool on this site that ranks versions of a post by predicted views, running on a placeholder predictor until the trained model is wired in.",
+      "A leakage audit of the original class project. It found three leaks (PCA fit before the train/test split, two cross-validation modes that produced identical folds, and momentum features that used future view counts) and replaced them with a leakage-safe evaluation and a simple creator baseline: the median of the creator's last 10 posts.",
+      "A data pipeline over three public datasets, scaled to about 44,000 clips from 1,637 creators (median 30 posts each) across 50 topics, with CLIP, X-CLIP and Whisper embeddings of each video's opening seconds and splits that keep creators and time apart. Processed on Modal, Google Colab and BYU's Slurm GPU cluster (about 120 P100 GPU-hours).",
+      "Eight-plus model families on the same creator-grouped folds, from ridge and gradient boosting to a fine-tuned CLIP ensemble, self-supervised pretraining and per-creator adaptation, each with a shuffled-label control.",
+      "Split, CQR and Mondrian conformal intervals on SMP-Video (4,000 posts from 3,488 creators).",
+      "A study of one ~1M-follower creator's own videos, with hand-labelled opening formats and a learning curve for how many posts a personal model needs.",
+      "A draft comparison tool on this site that ranks versions of a post with view ranges, running on a placeholder predictor until a trained model is wired in.",
     ],
     approach: [
       {
-        title: "Pretrain on public data, then adapt",
-        body: "Models train first on public TikTok data (SMP-Video and TikTok-10M), then adapt to a single creator's account, where there are far fewer videos to learn from.",
+        title: "Compare a post with its own creator",
+        body: "Most of the variation in views is between creators, so a post is scored against the median of the same creator's previous 10 posts. A content effect then means \"this kind of video does better than this creator usually does\", not \"big accounts get more views\".",
       },
       {
-        title: "Conformal intervals, grouped",
-        body: "Conformal prediction wraps any point forecast in an interval, calibrated on held-out videos so it covers the true view count at a rate you choose, without assumptions about the model. Mondrian conformal calibrates each creator-size group separately, so coverage holds for small creators and not only on average.",
+        title: "Opening types from the first three seconds",
+        body: "Each clip's first 3 seconds are embedded with CLIP and clustered with k-means (k = 12, chosen on cluster quality and stability across random halves). Lift is measured within creators, with bootstrap intervals over creators.",
+      },
+      {
+        title: "Conformal intervals, grouped by creator size",
+        body: "Conformal prediction wraps any forecast in an interval that covers the true value at a chosen rate on held-out data. Mondrian conformal calibrates each creator-size group separately, so the promise holds for small creators too, not only on average.",
       },
     ],
     architecture: [
-      "Public TikTok datasets",
-      "Leak-free splits",
-      "Forecasting model",
-      "Conformal calibration",
-      "Forecast with an interval",
+      "Public TikTok datasets + one creator's own videos",
+      "Leak-free, creator-disjoint splits",
+      "Opening-seconds embeddings (CLIP, X-CLIP, Whisper) + captions",
+      "Cluster lifts, breakout models, conformal intervals",
+      "Draft comparison tool",
+    ],
+    findings: [
+      {
+        title: "Some kinds of opening do better across creators",
+        body: "Across 44,030 clips from 1,637 creators, the best opening types draw 1.2-1.4x the same creator's usual views, and the worst about 0.8x. The ranking replicates between earlier and later posts. These are real effects, even though content does not beat the creator baseline on forecast error.",
+        demo: "hook-lift",
+      },
+      {
+        title: "For one creator, a content type broke out far more often, and it was predictable",
+        body: "On a ~1M-follower creator's own videos, one opening format broke out far more often than the rest. A personal model built on the opening seconds spotted the creator's breakouts at AUC ~0.85 (leave-one-out), and ~0.80 with only 15-20 posts of history. The general cross-creator model managed ~0.56 on the same videos.",
+      },
+      {
+        title: "Early metrics look like the most workable forecast",
+        body: "A hazard-gate experiment modelled breakout from a post's early metrics after publishing. Of the approaches tried, it was the most viable. It needs metrics pulled at fixed times after posting, and the public datasets here have one snapshot per post, so the next step is research data access.",
+      },
+      {
+        title: "Mondrian conformal keeps the promise for small creators",
+        body: "At a 90% target, plain split conformal covered the smallest creators' posts only 80% of the time; Mondrian covered 91%, with no wider intervals. The honest catch is width: even the best 90% interval spans about 85x in daily views from end to end. Move the slider to compare creator sizes.",
+        demo: "conformal-coverage",
+      },
+      {
+        title: "What didn't work, with intervals",
+        body: "Masked-autoencoder pretraining scored about 0.035-0.045 AUC below plain CLIP. Caption-to-opening contrastive pretraining lost 0.015 AUC [-0.027, -0.004]. MAML per-creator adaptation hurt, and in-context personalisation added only 0.005-0.010 Spearman. Frame order adds nothing: shuffled frames score the same, and the signal sits in the first 3 seconds.",
+      },
     ],
     metrics: [
       {
+        label: "Best opening types vs creator's norm",
+        value: "1.2–1.4x",
+        source: "Within-creator lift of the top five of 12 k-means opening clusters, 44,030 clips from 1,637 creators, 95% bootstrap intervals above 1. Early vs late replication r = +0.77.",
+      },
+      {
+        label: "Personal breakout model",
+        value: "AUC ~0.85",
+        source: "One ~1M-follower creator, leave-one-out on her own videos; ~0.80 with 15-20 posts of history, vs ~0.56 zero-shot from the cross-creator model.",
+      },
+      {
+        label: "Cross-creator breakout model",
+        value: "AUC 0.589",
+        source: "10-model fine-tuned CLIP ensemble on the opening seconds, unseen creators, 44K clips; shuffled-label null ~0.50. Spearman 0.125.",
+      },
+      {
         label: "Interval coverage",
         value: "91%",
-        source: "Mondrian conformal intervals at a 90% target, on the held-out split of the 204K-post benchmark, including the small-creator group. From the Nov 2026 project update.",
+        source: "Mondrian conformal at a 90% target on SMP-Video (4,000 posts, 3,488 creators, 5-fold creator-disjoint CV), 90-91% in every creator-size quartile. Plain split conformal: 80% for the smallest creators.",
+      },
+      {
+        label: "Ranking from captions",
+        value: "0.11 → 0.42",
+        source: "Spearman on SMP-Video, creator-disjoint CV: metadata only vs adding CLIP caption embeddings (0.33 with TF-IDF text). Adding creator stats reaches 0.70, but those are read after posting.",
+      },
+      {
+        label: "Creator baseline vs original model",
+        value: "MAE 0.91 vs 1.02",
+        source: "Median of the creator's last 10 posts vs the original project's best XGBoost model, log-views, 3 chronological folds. A random-embedding control also scored 1.02.",
       },
     ],
     limitations: [
-      "Interval width is not reported yet; coverage alone can be met with wide intervals, so width on the same split comes with the multimodal results.",
-      "The current forecaster does not yet use the video or caption content; the multimodal version is in progress.",
+      "Content alone carries a small signal across creators (breakout AUC ~0.58 against a 0.50 null). Most of the variance, 94%, is within a creator's own posts.",
+      "Intervals are honest but wide: the best 90% interval spans about 85x in daily views.",
+      "The single-creator result is one creator. Creators in the large set with 25-30 clips showed no per-creator signal, so 15-20 posts is not enough in general.",
+      "SMP-Video creator stats are read after posting, which the benchmark allows but a real forecast would not have.",
     ],
     next: [
-      "Add video and caption features and report coverage and width together (target: late Nov 2026).",
-      "Adapt the pretrained model to one creator's account.",
-      "Wire the trained model into the draft comparison tool.",
+      "Get research data access to pull a post's metrics at fixed times after publishing, and test the hazard gate on it.",
+      "Write up the results (target: Dec 2026).",
+      "Wire a trained model into the draft comparison tool.",
     ],
   },
   {
