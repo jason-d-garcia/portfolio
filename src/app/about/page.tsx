@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LifeLine } from "@/components/LifeLine";
 import { Record } from "@/components/Record";
 import { profile } from "@/content/profile";
 import { values, valuesLead } from "@/content/values";
@@ -39,6 +40,16 @@ export default function AboutPage() {
           </p>
         </div>
       </div>
+
+      <section aria-labelledby="life-title" className="mt-20 border-t border-ink pt-4 sm:mt-28">
+        <div className="mb-8 grid gap-2 sm:grid-cols-12 sm:gap-8">
+          <h2 id="life-title" className="meta sm:col-span-3">The long way here</h2>
+          <p className="max-w-[60ch] text-[0.9375rem] leading-snug text-muted sm:col-span-9">
+            A few of the things that made me who I am, in order. Walk through them.
+          </p>
+        </div>
+        <LifeLine />
+      </section>
 
       <section className="mt-20 grid gap-4 border-t border-ink pt-4 sm:mt-28 sm:grid-cols-12 sm:gap-8">
         <h2 className="meta sm:col-span-3">What matters</h2>
