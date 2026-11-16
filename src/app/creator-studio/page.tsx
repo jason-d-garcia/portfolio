@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function CreatorStudioPage() {
   return (
-    <article className="px-4 pt-10 pb-16 sm:px-8 sm:pt-14">
+    <article className="frame pt-10 pb-16 sm:pt-14">
       <header className="mb-8 max-w-[70ch]">
         <Link href="/projects/tiktok-conformal" className="text-muted underline-offset-4 hover:text-ink hover:underline">
           ← TikTok forecasting

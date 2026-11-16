@@ -1,44 +1,72 @@
 @import "tailwindcss";
 
-/* Light: paper and ink. Dark: charcoal. Poster fields are the same in both.
-   Two fields carry the site (yellow, blue) plus one accent (teal). --field-1 (red) is kept only for error
-   states inside the tools; it is not used on the pages. */
+/* Computational editorial. Light: warm paper and ink. Dark: charcoal. One accent (burnt orange) carries the site;
+   each project also has a quiet hue of its own, used only on its figure. --field-1 (red) is for error states in the tools. */
 :root {
-  --bg: #f2f2f0;
-  --surface: #e4e4e1;
-  --ink: #141414;
-  --muted: #555555;
-  --accent: #0c7866;
+  --bg: #f5f1e8;
+  --surface: #ebe5d7;
+  --rule: #d6cebd;
+  --ink: #1c1a17;
+  --muted: #655f55;
+  --accent: #b5451b;
   --accent-ink: #ffffff;
-  --field-1: #d71e1e;
-  --field-2: #1e4bd7;
-  --field-3: #0c7866;
-  --field-4: #ffe927;
-  --field-4-ink: #111111;
-  --hero-top-ink: #0c7866;
-  --accent-text: #0a6a5a;
+  --accent-text: #a03a13;
+  --field-1: #c22a1e;
+  --field-2: #2b50d6;
+  --field-3: var(--accent);
+  --field-4: #f1c27d;
+  --field-4-ink: #1c1a17;
 
-  /* Legacy names still used by the project template until M2. */
-  --paper: var(--bg);
-  --paper-2: var(--surface);
-  --ink-soft: var(--muted);
-  --rule: var(--surface);
+  --hue-senti: #b5451b;
+  --hue-tiktok: #2b50d6;
+  --hue-vgc: #4f7419;
+  --hue-ballroom: #8a3566;
+
+  color-scheme: light;
 }
 
+/* Dark values, applied by the OS preference unless the toggle says light, and by the toggle when it says dark. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #191919;
-    --surface: #262626;
-    --ink: #ffffff;
-    --muted: #a3a3a3;
-    --hero-top-ink: #ffffff;
-    --accent-text: #4cc9ae;
+  :root:not([data-theme="light"]) {
+    --bg: #171614;
+    --surface: #24221e;
+    --rule: #3a3731;
+    --ink: #f1ece2;
+    --muted: #a69f92;
+    --accent: #e27a45;
+    --accent-ink: #171614;
+    --accent-text: #ee8d58;
+    --field-1: #f0705f;
+    --field-2: #7f9bff;
+    --hue-senti: #ee8d58;
+    --hue-tiktok: #8aa4ff;
+    --hue-vgc: #a9d15c;
+    --hue-ballroom: #de8fbb;
+    color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --bg: #171614;
+  --surface: #24221e;
+  --rule: #3a3731;
+  --ink: #f1ece2;
+  --muted: #a69f92;
+  --accent: #e27a45;
+  --accent-ink: #171614;
+  --accent-text: #ee8d58;
+  --field-1: #f0705f;
+  --field-2: #7f9bff;
+  --hue-senti: #ee8d58;
+  --hue-tiktok: #8aa4ff;
+  --hue-vgc: #a9d15c;
+  --hue-ballroom: #de8fbb;
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
+  --color-rule: var(--rule);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
@@ -49,28 +77,36 @@
   --color-field-3: var(--field-3);
   --color-field-4: var(--field-4);
   --color-field-4-ink: var(--field-4-ink);
-  --color-paper: var(--paper);
-  --color-paper-2: var(--paper-2);
-  --color-ink-soft: var(--ink-soft);
-  --color-rule: var(--rule);
-  --font-serif: var(--font-face), Georgia, "Times New Roman", serif;
+  --color-hue: var(--hue, var(--accent));
   --font-sans: var(--font-sans-face), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-display-face), var(--font-sans-face), system-ui, sans-serif;
+  --font-serif: var(--font-serif-face), Georgia, "Times New Roman", serif;
   --font-mono: var(--font-mono-face), ui-monospace, "SF Mono", Menlo, monospace;
 }
 
 html {
   background: var(--bg);
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--font-face), Georgia, "Times New Roman", serif;
-  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
-  line-height: 1.5;
-  letter-spacing: 0.005em;
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  line-height: 1.55;
   font-kerning: normal;
   text-rendering: optimizeLegibility;
+}
+
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+p, li {
+  text-wrap: pretty;
 }
 
 ::selection {
@@ -79,56 +115,106 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid var(--accent);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
-.mark {
-  padding: 0 0.1em;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+/* The page measure: a 12-column grid inside a centred frame with a 16px gutter on phones. */
+.frame {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 82rem;
+  padding-inline: 1rem;
+}
+@media (min-width: 640px) {
+  .frame { padding-inline: 2rem; }
 }
 
-/* Masked headline: each line rises from behind its own baseline. */
+/* Small monospace labels: section numbers, statuses, metadata. */
+.meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* The expressive voice: an italic serif, used a few words at a time. */
+.voice {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.link {
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  transition: text-decoration-color 200ms, color 200ms;
+}
+.link:hover {
+  color: var(--accent-text);
+  text-decoration-color: currentColor;
+}
+
+/* Project pages number their sections in order, whichever ones a project has. */
+.numbered { counter-reset: section; }
+.numbered .section-label::before {
+  counter-increment: section;
+  content: counter(section, decimal-leading-zero) " / ";
+  color: var(--accent-text);
+}
+
+/* Headline: each line rises from behind its own baseline. */
 .line-mask {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.06em;
+  padding-bottom: 0.08em;
 }
 .line-mask > span {
   display: block;
   animation: line-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
-.line-mask:nth-child(2) > span {
-  animation-delay: 110ms;
-}
+.line-mask:nth-child(2) > span { animation-delay: 90ms; }
+.line-mask:nth-child(3) > span { animation-delay: 180ms; }
 .fade-up {
-  animation: fade-up 700ms cubic-bezier(0.16, 1, 0.3, 1) 450ms both;
+  animation: fade-up 700ms cubic-bezier(0.16, 1, 0.3, 1) 400ms both;
 }
 @keyframes line-rise {
   from { transform: translateY(105%); }
   to { transform: translateY(0); }
 }
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 /* Section entrances, added by <Reveal>. Content stays visible without script. */
-.js [data-reveal] > * {
+.js [data-reveal] {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(18px);
   transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.js [data-reveal].is-in > * {
+.js [data-reveal].is-in {
   opacity: 1;
   transform: none;
 }
-.js [data-reveal].is-in > *:nth-child(2) { transition-delay: 80ms; }
-.js [data-reveal].is-in > *:nth-child(3) { transition-delay: 160ms; }
-.js [data-reveal].is-in > *:nth-child(4) { transition-delay: 240ms; }
+
+/* The archive sketch on the VGC figure: one cell at a time is "being evaluated". */
+.cell-pulse {
+  animation: cell-pulse 2.4s ease-in-out infinite;
+}
+@keyframes cell-pulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.9; }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .line-mask > span, .fade-up { animation: none; }
-  .js [data-reveal] > * { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+  .line-mask > span, .fade-up, .cell-pulse { animation: none; }
+  .cell-pulse { opacity: 0.35; }
+  .js [data-reveal] { opacity: 1; transform: none; transition: none; }
 }

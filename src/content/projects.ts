@@ -43,6 +43,8 @@ export type Project = {
   limitations: string[];
   next: string[];
   credits?: string;
+  // What I thought going in, and what the work showed instead. Only where the record supports it.
+  surprise?: { expected: string; happened: string };
 };
 
 const allProjects: Project[] = [
@@ -118,6 +120,12 @@ const allProjects: Project[] = [
         source: "Lyrics alone vs lyrics + audio, Pearson r against the median placement from 15 study listeners on 100 songs (3+ raters each). Valence: 0.63 → 0.65, a gain within noise.",
       },
     ],
+    surprise: {
+      expected:
+        "That more model would mean a better map: adding audio would help both axes, and fine-tuning the audio model would help again.",
+      happened:
+        "Audio helped arousal a lot and valence barely at all. Fine-tuning the audio model beat the frozen one on the benchmark but not with real listeners, so the simpler frozen model is the one that stayed live.",
+    },
     limitations: [
       "MERGE's valence and arousal come from AllMusic mood tags mapped through word norms, not from listeners rating each song, so the target is noisy.",
       "Predictions are pulled toward the centre. The test songs leave Nervous and Tense empty; with the Billboard hits every section has songs.",
@@ -371,6 +379,12 @@ const allProjects: Project[] = [
         source: "Median of the creator's last 10 posts vs the original project's best XGBoost model, log-views, 3 chronological folds. A random-embedding control also scored 1.02.",
       },
     ],
+    surprise: {
+      expected:
+        "That what is in a video would predict how it does. The original class project reported exactly that, and I set out to improve its model.",
+      happened:
+        "Three data leaks explained the original result. With them fixed, the median of a creator's last 10 posts beat the model. Content effects are real but small across creators, and much stronger inside one creator's own history.",
+    },
     limitations: [
       "Content alone carries a small signal across creators (breakout AUC ~0.58 against a 0.50 null). Most of the variance, 94%, is within a creator's own posts.",
       "Intervals are honest but wide: the best 90% interval spans about 85x in daily views.",
@@ -408,10 +422,13 @@ const allProjects: Project[] = [
   },
 ];
 
-const order = ["moodify", "vgc-team-generation", "tiktok-conformal", "ballroom", "tutoring-assistant"];
+// Projects with real work behind them, in display order. Ideas with nothing built yet live on /explorations;
+// their pages still exist (see projectPages) so old links keep working.
+const order = ["moodify", "tiktok-conformal", "vgc-team-generation", "ballroom"];
 export const projects: Project[] = order.map((slug) => allProjects.find((p) => p.slug === slug)!);
+export const projectPages: Project[] = allProjects;
 
-export const getProject = (slug: string) => projects.find((p) => p.slug === slug);
+export const getProject = (slug: string) => allProjects.find((p) => p.slug === slug);
 
 export const statusLabel: Record<ProjectStatus, string> = {
   live: "Live demo",

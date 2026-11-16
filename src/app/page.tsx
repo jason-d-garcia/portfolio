@@ -1,122 +1,166 @@
 import Link from "next/link";
-import { ProjectList } from "@/components/ProjectList";
-import { ProofStrip } from "@/components/ProofStrip";
+import { ProjectFigure, projectHue } from "@/components/previews";
+import { Score } from "@/components/Score";
+import { SectionHead } from "@/components/SectionHead";
+import { StatusBadge } from "@/components/StatusBadge";
+import { explorations } from "@/content/explorations";
 import { profile } from "@/content/profile";
-import { hasResume } from "@/lib/site";
+import { projects } from "@/content/projects";
+import { values, valuesLead } from "@/content/values";
 
-const h2 = "text-[clamp(2rem,1.3rem+3.2vw,4rem)] leading-none tracking-[-0.02em]";
+const pursuits = [
+  { name: "Music", body: "Piano, voice, composing and arranging. I came close to majoring in piano performance.", href: "/beyond#music" },
+  { name: "Ballroom", body: "Competitive dancing, and running rehearsals for a showcase company.", href: "/beyond#dance" },
+  { name: "Mathematics", body: "My first degree. I like knowing why an algorithm works, not only how to call it.", href: "/beyond#interests" },
+  { name: "Languages", body: "Spanish and Italian, some German and Russian, and an interest in how languages work.", href: "/beyond#interests" },
+];
+
+const arrow = "transition-transform duration-300 group-hover:translate-x-1";
 
 export default function Home() {
   return (
     <>
-      {/* One field, one colour: the headline sits whole on the yellow, the intro and the links at its foot. */}
-      <section className="flex flex-col justify-between bg-field-4 px-4 pt-14 pb-10 text-field-4-ink sm:min-h-[calc(100svh-4rem)] sm:px-8 sm:pt-20 sm:pb-12">
-        <h1 className="sr-only">Jason Garcia: applied ML for learning</h1>
-        <p aria-hidden className="text-[15vw] leading-[0.9] tracking-[-0.03em] sm:text-[clamp(4rem,10.5vw,10rem)]">
-          <span className="line-mask"><span>Applied ML</span></span>
-          <span className="line-mask"><span>for learning</span></span>
+      <section className="frame pt-10 sm:pt-14">
+        <p className="meta fade-up" style={{ animationDelay: "0ms" }}>
+          {profile.name} <span className="text-rule">—</span> AI / ML · Mathematics · Creative technology
         </p>
-        <div className="fade-up mt-12 flex flex-col gap-6 sm:mt-16 sm:flex-row sm:items-end sm:justify-between">
-          <p className="max-w-2xl text-[1.0625rem] leading-snug sm:text-[clamp(1.25rem,1.1rem+0.7vw,1.625rem)]">
-            I&rsquo;m Jason Garcia, an MS Computer Science student at BYU. {profile.headline}
+        <h1 className="mt-6 max-w-[16ch] text-[clamp(2.5rem,1.2rem+5.6vw,5.75rem)] leading-[0.95] tracking-[-0.035em] sm:mt-8">
+          <span className="line-mask"><span>Exploring ideas,</span></span>
+          <span className="line-mask"><span>building systems,</span></span>
+          <span className="line-mask"><span>making <span className="voice text-accent-text">things that matter.</span></span></span>
+        </h1>
+        <div className="fade-up mt-8 grid gap-6 sm:mt-12 sm:grid-cols-12 sm:gap-8">
+          <p className="max-w-[58ch] text-[clamp(1.0625rem,1rem+0.45vw,1.3125rem)] leading-snug sm:col-span-7 sm:col-start-4">
+            I&rsquo;m an MS Computer Science student at BYU working in machine learning, optimization and interactive software.
+            Lately that means a map of music you browse by feeling, forecasts that say how sure they are, and a search for
+            Pokémon teams nobody has tried. I care most about tools that help people learn, create and do what they
+            couldn&rsquo;t before.
           </p>
-          <div className="flex shrink-0 flex-wrap gap-3 font-sans">
-            <a
-              href="#work"
-              className="inline-flex h-12 items-center bg-field-4-ink px-6 text-base text-field-4 transition-transform hover:-translate-y-0.5 active:translate-y-0"
-            >
-              See the projects
-            </a>
-            {hasResume && (
-              <Link href="/resume" className="inline-flex h-12 items-center border border-field-4-ink/40 px-6 text-base hover:border-field-4-ink">
-                Resume
-              </Link>
-            )}
-            {profile.links.email && (
-              <a href={`mailto:${profile.links.email}`} className="inline-flex h-12 items-center border border-field-4-ink/40 px-6 text-base hover:border-field-4-ink">
-                Email
-              </a>
-            )}
-          </div>
+          <ul className="flex flex-wrap gap-x-6 gap-y-2 sm:col-span-7 sm:col-start-4">
+            <li><a href="#work" className="link">Selected work ↓</a></li>
+            <li><Link href="/about" className="link">About me</Link></li>
+            <li><a href={profile.links.github} className="link">GitHub ↗</a></li>
+          </ul>
         </div>
       </section>
 
-      <section className="px-4 py-12 sm:px-8 sm:py-16">
-        <ProofStrip />
-      </section>
-
-      <section id="work" className="scroll-mt-4 px-4 pt-10 pb-24 sm:px-8 sm:pt-16 sm:pb-32">
-        <div data-reveal className="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between">
-          <h2 className={h2}>Projects</h2>
-          <p className="max-w-sm font-sans text-sm text-muted sm:text-base">
-            Two shipped, two in progress and one idea, each labelled as what it is.{" "}
-            <Link href="/projects" className="text-ink underline underline-offset-4 hover:text-accent-text">
-              Open the notebook →
-            </Link>
+      <section aria-labelledby="score-title" className="frame pt-16 sm:pt-24">
+        <div className="mb-8 grid gap-2 sm:grid-cols-12 sm:gap-8">
+          <h2 id="score-title" className="meta sm:col-span-3">The work, as a score</h2>
+          <p className="max-w-[60ch] text-[0.9375rem] leading-snug text-muted sm:col-span-9">
+            Each line is a discipline. Each chord is something I&rsquo;ve built, am exploring, or do away from the keyboard,
+            with a note on every line it touches. Hollow notes are ideas with nothing built yet. Pick a chord, and turn the
+            sound on to hear it.
           </p>
         </div>
-        <div className="mt-10 sm:mt-14">
-          <ProjectList />
-        </div>
+        <Score />
       </section>
 
-      <section className="bg-field-2 px-4 py-24 text-white sm:px-8 sm:py-32">
-        <p
-          data-reveal
-          className="max-w-[65ch] text-[1.25rem] leading-[1.3] sm:text-[clamp(1.375rem,0.9rem+1.1vw,1.875rem)] sm:leading-[1.25]"
-        >
-          <span>
-            <strong className="font-medium">Jason Garcia.</strong> I&rsquo;m working toward an{" "}
-            <mark className="mark bg-field-4 text-field-4-ink">MS in Computer Science at BYU</mark>, finishing in December 2027, after a
-            BS in Mathematics. Since 2020 I&rsquo;ve taught 3,000+ math and programming lessons at Juni Learning, where I also wrote the
-            on-demand Minecraft digital-logic course and trained new instructors. Teaching is where my interest in machine learning
-            comes from: every student deserves a fair chance to learn, and good tools can help. Today I&rsquo;m a data science intern at
-            The Church of Jesus Christ of Latter-day Saints, building analytics for Meetinghouse &amp; Facilities. My projects cover
-            NLP, audio models, uncertainty and search, and I measure each one before I call it done. I&rsquo;m looking for a{" "}
-            <mark className="mark bg-field-4 text-field-4-ink">Summer 2027 internship</mark> in applied ML, especially on teams building
-            for learners.{" "}
-            <a href="#contact" className="underline underline-offset-4 hover:text-field-4">
-              Get in touch.
-            </a>
-          </span>
-        </p>
-      </section>
-
-      <section id="experience" className="scroll-mt-4 px-4 py-24 sm:px-8 sm:py-32">
-        <div className="sm:ml-[22%] sm:max-w-[40rem]">
-          <h2 data-reveal className={h2}>
-            Experience
-          </h2>
-          <ul className="mt-10 space-y-7">
-            {profile.experience.map((e) => (
-              <li key={e.org} data-reveal>
-                <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-6">
-                  <p className="text-lg">
-                    <span className="font-medium">{e.org}</span>
-                    <span className="text-muted"> · {e.role}</span>
+      <section id="work" className="frame scroll-mt-6 pt-24 sm:pt-36">
+        <SectionHead index="01" title="Selected work">
+          <p className="max-w-[46ch] font-display text-[clamp(1.5rem,1.2rem+1.2vw,2.25rem)] leading-[1.1] tracking-[-0.02em]">
+            Four projects, each with the figure, the number and the catch.
+          </p>
+        </SectionHead>
+        <ol className="mt-12 space-y-20 sm:mt-20 sm:space-y-32">
+          {projects.map((p, i) => (
+            <li key={p.slug} data-reveal style={{ "--hue": projectHue(p.slug) } as React.CSSProperties}>
+              <Link href={`/projects/${p.slug}`} className="group grid items-end gap-6 sm:grid-cols-12 sm:gap-8">
+                <ProjectFigure
+                  slug={p.slug}
+                  className={i % 2 ? "sm:order-2 sm:col-span-6 sm:col-start-7" : "sm:col-span-7"}
+                />
+                <div className={i % 2 ? "sm:order-1 sm:col-span-5 sm:row-start-1" : "sm:col-span-5"}>
+                  <p className="meta flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span className="text-hue">{String(i + 1).padStart(2, "0")}</span>
+                    <StatusBadge project={p} />
                   </p>
-                  {e.when && <p className="shrink-0 font-sans text-sm text-muted tabular-nums sm:pt-1">{e.when}</p>}
+                  <h3 className="mt-3 font-display text-[clamp(2rem,1.4rem+2.4vw,3.5rem)] leading-none font-medium tracking-[-0.03em]">
+                    {p.name}
+                  </h3>
+                  <p className="mt-4 text-[1.0625rem] leading-snug">{p.tagline}</p>
+                  {p.result && <p className="mt-3 text-[0.9375rem] leading-snug text-muted">{p.result}</p>}
+                  <p className="mt-5 text-[0.9375rem]">
+                    <span className="link">Read the write-up</span> <span aria-hidden className={`inline-block ${arrow}`}>→</span>
+                  </p>
                 </div>
-                <p className="mt-1">{e.detail}</p>
-              </li>
-            ))}
-          </ul>
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-          <h2 data-reveal className={`mt-24 ${h2}`}>
-            Education
-          </h2>
-          <ul className="mt-10 space-y-6">
-            {profile.education.map((e) => (
-              <li key={e.degree} data-reveal className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:gap-6">
-                <p className="text-lg">
-                  <span className="font-medium">{e.degree}</span>
-                  <span className="text-muted"> · {e.school}</span>
-                </p>
-                <p className="shrink-0 font-sans text-sm text-muted tabular-nums sm:pt-1">{e.detail}</p>
-              </li>
-            ))}
-          </ul>
+      <section className="frame pt-24 sm:pt-36">
+        <SectionHead index="02" title="Current explorations">
+          <p className="max-w-[46ch] font-display text-[clamp(1.5rem,1.2rem+1.2vw,2.25rem)] leading-[1.1] tracking-[-0.02em]">
+            Ideas and unfinished experiments, labelled as what they are.
+          </p>
+        </SectionHead>
+        <ul className="mt-10 sm:ml-[25%] sm:mt-14">
+          {explorations.map((e) => (
+            <li key={e.id} data-reveal className="border-b border-rule first:border-t">
+              <Link href={`/explorations#${e.id}`} className="group grid gap-1 py-4 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-8">
+                <span className="text-[1.125rem] leading-snug group-hover:text-accent-text">{e.question}</span>
+                <span className="meta">{e.stage}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-6 sm:ml-[25%]">
+          <Link href="/explorations" className="link">All explorations →</Link>
+        </p>
+      </section>
+
+      <section className="frame pt-24 sm:pt-36">
+        <SectionHead index="03" title="Beyond the code">
+          <p className="max-w-[46ch] font-display text-[clamp(1.5rem,1.2rem+1.2vw,2.25rem)] leading-[1.1] tracking-[-0.02em]">
+            Music, dance, mathematics and languages, <span className="voice">each one a way of thinking.</span>
+          </p>
+        </SectionHead>
+        <ul className="mt-10 grid gap-x-8 gap-y-8 sm:mt-14 sm:grid-cols-12">
+          {pursuits.map((p, i) => (
+            <li key={p.name} data-reveal className={`sm:col-span-3 ${i % 2 ? "sm:mt-10" : ""}`}>
+              <Link href={p.href} className="group block border-t border-rule pt-3">
+                <span className="block font-display text-2xl tracking-[-0.02em] group-hover:text-accent-text">{p.name}</span>
+                <span className="mt-2 block text-[0.9375rem] leading-snug text-muted">{p.body}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-24 bg-surface sm:mt-36">
+        <div className="frame py-20 sm:py-28">
+          <SectionHead index="04" title="What matters">
+            <p data-reveal className="max-w-[30ch] font-display text-[clamp(1.75rem,1.2rem+2.2vw,3rem)] leading-[1.08] tracking-[-0.025em]">
+              Technology is a means. <span className="voice">The point is who it helps.</span>
+            </p>
+            <p className="mt-6 max-w-[58ch] text-[1.0625rem] leading-snug">{valuesLead}</p>
+            <dl className="mt-12 grid gap-x-8 gap-y-8 sm:grid-cols-2">
+              {values.map((v) => (
+                <div key={v.name} data-reveal>
+                  <dt className="meta text-ink">{v.name}</dt>
+                  <dd className="mt-2 max-w-[44ch] text-[0.9375rem] leading-snug text-muted">{v.body}</dd>
+                </div>
+              ))}
+            </dl>
+          </SectionHead>
         </div>
+      </section>
+
+      <section className="frame py-24 sm:py-36">
+        <SectionHead index="05" title="About">
+          <p className="max-w-[60ch] text-[clamp(1.125rem,1rem+0.6vw,1.5rem)] leading-snug">
+            I&rsquo;m finishing an MS in Computer Science at BYU in December 2027, after a BS in Mathematics. I&rsquo;ve taught
+            math and programming at Juni Learning since 2020, and I&rsquo;m a data science intern at The Church of Jesus Christ
+            of Latter-day Saints. I&rsquo;m looking for a Summer 2027 internship in applied ML, especially on teams building
+            for learners.
+          </p>
+          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
+            <li><Link href="/about" className="link">More about me →</Link></li>
+            <li><Link href="/resume" className="link">Resume →</Link></li>
+          </ul>
+        </SectionHead>
       </section>
     </>
   );
