@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- plain Node CommonJS build script, not app code */
 // Builds the Reg M-B legal pool JSON for the team builder from Showdown's champions mod.
 // Run: npm i --no-save pokemon-showdown@0.11.11 && node scripts/vgc/build-pool.js public/vgc/pool.json
 const fs = require('fs');
