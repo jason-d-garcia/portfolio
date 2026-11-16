@@ -50,7 +50,7 @@ export default async function ProjectPage({ params }: Params) {
         <StatusBadge project={project} className="mt-5 text-base" />
         <p className="mt-3 max-w-2xl text-[clamp(1.25rem,1.1rem+0.7vw,1.625rem)] leading-snug">{project.tagline}</p>
         {project.result && <p className="mt-4 max-w-[60ch] font-sans text-muted">{project.result}</p>}
-        {(project.demoUrl || project.repoUrl || project.tool) && (
+        {(project.demoUrl || project.repoUrl || project.paperUrl || project.tool) && (
           <div className="mt-10 flex flex-wrap gap-3">
             {project.tool && (
               <Link href={project.tool.href} className="inline-flex h-12 items-center bg-accent px-6 font-sans text-base text-accent-ink transition-transform hover:-translate-y-0.5">
@@ -65,6 +65,11 @@ export default async function ProjectPage({ params }: Params) {
             {project.repoUrl && (
               <a href={project.repoUrl} className="inline-flex h-12 items-center bg-surface px-6 font-sans text-base transition-transform hover:-translate-y-0.5">
                 Read the code ↗
+              </a>
+            )}
+            {project.paperUrl && (
+              <a href={project.paperUrl} className="inline-flex h-12 items-center bg-surface px-6 font-sans text-base transition-transform hover:-translate-y-0.5">
+                Read the report (PDF) ↗
               </a>
             )}
           </div>
