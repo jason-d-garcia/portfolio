@@ -12,8 +12,8 @@ import { BIRTH_YEAR, greetings, milestones, type Prop } from "@/content/life";
  */
 
 const LAST = milestones.length - 1;
-const H = 310;
-const GROUND = 252;
+const H = 334;
+const GROUND = 276;
 const ZOOM = 1.2;
 const PLAY = 1.1; // milestones per second when it plays on its own
 const GLIDE = 2.6; // top speed when stepping to a milestone
@@ -88,9 +88,40 @@ const GLYPH: Record<string, ReactNode> = {
   trophy: <><path d="M7 4h10v6c0 3.5-2.2 6-5 6s-5-2.5-5-6z" /><path d="M7 6H3c0 4 2 6 4.5 6M17 6h4c0 4-2 6-4.5 6" /><path d="M12 16v4M8 23h8M9 20h6" /></>,
   laptop: <><rect x="4" y="6" width="16" height="11" rx="1" /><path d="M1 21h22l-2-4H3z" /></>,
   flag: <><path d="M5 23V3" /><path d="M5 4h14l-3.5 4.5L19 13H5" /></>,
+  curtain: (
+    <>
+      <path d="M1 23V3h22v20" />
+      <path d="M1 7c1.8 3 3.7 3 5.5 0 1.8 3 3.7 3 5.5 0 1.8 3 3.7 3 5.5 0 1.8 3 3.7 3 5.5 0" />
+      <path d="M1 7c1 7 1 11 4 16M23 7c-1 7-1 11-4 16M3 11v10M21 11v10" />
+      <path d="M-1 23h26" />
+    </>
+  ),
+  spot: <path d="M12 3L4.5 23h15z" fill="var(--accent)" fillOpacity="0.13" stroke="none" />,
+  crowd: (
+    <>
+      {[1.5, 5.7, 9.9, 14.1, 18.3, 22.5].map((x, n) => (
+        <path key={x} d={`M${x - 2.4} ${27.5}v-1.6a2.4 2.4 0 0 1 4.8 0v1.6`} fill="var(--bg)" stroke="var(--muted)" transform={`translate(0 ${n % 2 ? 0.5 : 0})`} />
+      ))}
+    </>
+  ),
+  goal: (
+    <>
+      <path d="M5 23V5h11l6 18" />
+      <path d="M5 9.5h12.5M5 14h14M5 18.500h15.500M9 5v18M13 5l1.5 18M16 5l3 18" strokeOpacity="0.5" />
+    </>
+  ),
+  plane: (
+    <>
+      <path d="M2.5 9l-1.5-5h3.500l3 4" fill="var(--bg)" />
+      <path d="M1.5 12.500c0-2.5 2.5-3.5 5.5-3.500h3.200c0.8 0 1 2.2 2.8 2.200s2-2.2 2.8-2.200H17c3.5 0 5.5 1.5 5.5 3.500S20.5 16 17 16H7c-3 0-5.5-1-5.5-3.500z" fill="var(--bg)" />
+      <path d="M9 14l-3.5 6.500h4.500l5.5-6.500z" fill="var(--bg)" />
+      <path d="M23.2 8.500v8" />
+    </>
+  ),
+  cloud: <path d="M5 18a3.5 3.5 0 0 1 0.5-7 5 5 0 0 1 9.5-1 4 4 0 0 1 4 8z" strokeOpacity="0.55" />,
   stool: <><path d="M9.5 14h5" /><path d="M10 14l-0.5 9M14 14l0.5 9" /></>,
 };
-const BEHIND = new Set(["stage", "house", "stool"]);
+const BEHIND = new Set(["curtain", "spot", "house", "stool", "cloud"]);
 
 const stand = ({ A, L, T }: Dims): Pose => ({
   hip: [0, -L * 0.98],
@@ -158,18 +189,26 @@ function scene(kind: Prop, t: number, d: Dims): Scene {
       };
     }
     case "kick": {
-      const k = s(t * 3);
-      const a = k * 0.9 + 0.2;
-      const u = Math.max(0, k);
+      // One loop: wind up, strike, the ball arcs into the net, arms go up.
+      const u = (t * 0.5) % 1;
+      const a = u < 0.3 ? lerp(-0.8, 1.05, smooth(u / 0.3)) : lerp(1.05, 0.1, smooth((u - 0.3) / 0.25));
+      const fly = smooth((u - 0.27) / 0.3);
+      const joy = smooth((u - 0.55) / 0.1) * (1 - smooth((u - 0.92) / 0.08));
+      const gx = 74;
+      const x0 = L * 0.75 + 5;
       return {
         pose: {
-          ...st,
-          sh: [-3 - k * 3, sy],
+          hip: [0, -L * 0.98 - joy * Math.abs(s(t * 11)) * 4],
+          sh: [-3 + a * 2, sy - joy * Math.abs(s(t * 11)) * 4],
+          fb: [-3, 0],
           ff: [s(a) * L * 0.95, -L * 0.98 + Math.cos(a) * L * 0.95],
-          hf: [-A * 0.3 - k * A * 0.4, sy + A * 0.6],
-          hb: [A * 0.4 + k * A * 0.4, sy + A * 0.5],
+          hf: mix([-A * 0.3 - a * A * 0.4, sy + A * 0.6], [A * 0.55, sy - A * 0.8], joy),
+          hb: mix([A * 0.4 + a * A * 0.4, sy + A * 0.5], [-A * 0.55, sy - A * 0.8], joy),
         },
-        items: [{ g: "ball", x: L * 0.9 + 6 + u * 36, y: -6 - u * 28, s: 0.65, r: t * 220 }],
+        items: [
+          { g: "goal", x: gx + 6, y: -9 * 3.2, s: 3.2 },
+          { g: "ball", x: lerp(x0, gx, fly), y: -6 - Math.sin(Math.PI * fly) * 20 - fly * 16 + smooth((u - 0.6) / 0.15) * 16, s: 0.6, r: t * 220 },
+        ],
       };
     }
     case "controller": {
@@ -204,8 +243,17 @@ function scene(kind: Prop, t: number, d: Dims): Scene {
       };
     }
     case "cube": {
-      const x = A * 0.65, y = sy + A * 0.6, k = s(t * 3);
-      return { pose: { ...st, hf: [x + 5, y + k * 3], hb: [x - 5, y - k * 3] }, items: [{ g: "cube", x, y, s: 0.55, r: k * 25 }] };
+      // Feet keep a ball up while the hands work the cube.
+      const x = A * 0.6, y = sy + A * 0.55, k = s(t * 3);
+      const j = Math.abs(s(t * 3.2));
+      const bx = L * 0.5 + 6;
+      return {
+        pose: { ...st, ff: [bx - 5, -(1 - j) * (1 - j) * L * 0.4], hf: [x + 5, y + k * 3], hb: [x - 5, y - k * 3] },
+        items: [
+          { g: "cube", x, y, s: 0.55, r: k * 25 },
+          { g: "ball", x: bx, y: -6 - j * L * 0.7, s: 0.65, r: t * 120 },
+        ],
+      };
     }
     case "note": {
       const k = s(t * 2.2);
@@ -221,19 +269,24 @@ function scene(kind: Prop, t: number, d: Dims): Scene {
     case "badge":
       return { pose: { ...st, hf: [6, head - 3] }, items: [{ g: "badge", x: 0.5, y: sy + A * 0.35, s: 0.45 }] };
     case "stage": {
-      const k = s(t * 5);
-      const sc = ((L + T + 2 * r) / 24) * 1.3;
+      // A proscenium with a spotlight and the front row of the audience, so it reads as theatre.
+      const k = s(t * 4.2);
+      const sc = ((L + T + 2 * r) * 1.5) / 20;
       const up = Math.max(0, k), dn = Math.max(0, -k);
       return {
         pose: {
-          hip: [0, -L * 0.98 - Math.abs(k) * 2],
-          sh: [k * 2, sy - Math.abs(k) * 2],
-          ff: [3 + up * L * 0.5, -up * L * 0.3],
-          fb: [-3 - dn * L * 0.5, -dn * L * 0.3],
-          hf: [A * 0.8, sy - A * 0.4 + k * 5],
-          hb: [-A * 0.8, sy - A * 0.4 - k * 5],
+          hip: [k * 3, -L * 0.98 - Math.abs(k) * 2],
+          sh: [k * 6, sy - Math.abs(k) * 2],
+          ff: [3 + up * L * 0.55, -up * L * 0.35],
+          fb: [-3 - dn * L * 0.55, -dn * L * 0.35],
+          hf: [A * 0.85, sy - A * 0.45 + k * 7],
+          hb: [-A * 0.85, sy - A * 0.45 - k * 7],
         },
-        items: [{ g: "stage", x: 0, y: -9 * sc, s: sc }],
+        items: [
+          { g: "spot", x: 0, y: -9 * sc, s: sc },
+          { g: "curtain", x: 0, y: -9 * sc, s: sc },
+          { g: "crowd", x: 0, y: -9 * sc, s: sc },
+        ],
       };
     }
     case "cap": {
@@ -277,9 +330,25 @@ function scene(kind: Prop, t: number, d: Dims): Scene {
         partner: { hip: [17 + k * 4, -L * 0.93], sh: [17 + k * 5, sy + 5], hf: join, hb: [-8 + k * 5, sy + 5], ff: [14 + k * 5, -up * 3], fb: [20 + k * 5, -dn * 3] },
       };
     }
-    case "briefcase": {
-      const x = 7 + s(t * 2) * 2, y = sy + A + 7;
-      return { pose: { ...st, hf: [x, y - 9] }, items: [{ g: "briefcase", x, y, s: 0.7 }] };
+    case "fly": {
+      // Up off the ground in a small plane, between two cities.
+      const alt = 58 + s(t * 1.6) * 4;
+      const tilt = s(t * 1.6 + 1) * 4;
+      const there = s(t * 0.7) > 0;
+      const cloud = (n: number, speed: number, y: number): Item => {
+        const u = (t * speed + n * 0.37) % 1;
+        return { g: "cloud", x: 110 - u * 220, y: -alt + y, s: 1.3 + n * 0.3, o: Math.sin(Math.PI * u) };
+      };
+      return {
+        pose: { hip: [0, -alt], sh: [1, -alt - T * 0.8], ff: [L * 0.8, -alt + 4], fb: [L * 0.72, -alt + 5], hf: [A * 0.5, -alt - T * 0.3], hb: [-A * 0.55 + s(t * 6) * 3, -alt - T * 0.8 - A * 0.6] },
+        items: [
+          cloud(0, 0.22, -34),
+          cloud(1, 0.16, 18),
+          cloud(2, 0.27, -6),
+          { g: "plane", x: 2, y: -alt + 2, s: 3.2, r: tilt },
+          { g: there ? "Dallas" : "Washington, DC", text: true, x: 0, y: -alt + 50, s: 0.8, o: Math.abs(s(t * 0.7)) },
+        ],
+      };
     }
     case "trophy": {
       const y = head - r - 14 + s(t * 4) * 2;
@@ -342,13 +411,13 @@ function Body({ pose, d, turn = 1, color = "var(--ink)", opacity = 1 }: { pose: 
   );
 }
 
-function Thing({ item, w }: { item: Item; w: number }) {
+function Thing({ item, w, flip = 1 }: { item: Item; w: number; flip?: number }) {
   const o = (item.o ?? 1) * w;
   if (o <= 0.01) return null;
   const sc = item.s * lerp(0.4, 1, w);
   if (item.text) {
     return (
-      <text x={item.x} y={item.y} opacity={o} textAnchor="middle" fontSize={15 * sc} fill="var(--accent-text)" style={{ fontFamily: "var(--font-serif)", fontStyle: "italic" }}>
+      <text x={item.x * flip} y={item.y} opacity={o} transform={`scale(${flip} 1)`} textAnchor="middle" fontSize={15 * sc} fill="var(--accent-text)" style={{ fontFamily: "var(--font-serif)", fontStyle: "italic" }}>
         {item.g}
       </text>
     );
@@ -375,12 +444,13 @@ const hellos = greetings.map((g) => {
   return { ...g, at: i + (g.year - milestones[i].year) / (milestones[i + 1].year - milestones[i].year) };
 });
 
+/* A speech bubble whose tail tip sits at (0, 0), with the bubble up and to the right of it. */
 function Bubble({ text, opacity }: { text: string; opacity: number }) {
   const wide = text.length * 8.2 + 22;
   return (
-    <g opacity={opacity}>
+    <g opacity={opacity} transform={`translate(${wide / 2 - 12} -7)`}>
       <path
-        d={`M${-wide / 2 + 6} -26h${wide - 12}a6 6 0 0 1 6 6v14a6 6 0 0 1 -6 6h${-(wide / 2 - 12)}l-6 7v-7h${-(wide / 2 - 12)}a6 6 0 0 1 -6 -6v-14a6 6 0 0 1 6 -6z`}
+        d={`M${-wide / 2 + 6} -26h${wide - 12}a6 6 0 0 1 6 6v14a6 6 0 0 1 -6 6h${-(wide - 26)}l-8 7v-7h-6a6 6 0 0 1 -6 -6v-14a6 6 0 0 1 6 -6z`}
         fill="var(--bg)"
         stroke="var(--accent)"
         strokeWidth="1.5"
@@ -413,6 +483,8 @@ export function LifeLine() {
   const held = useRef(0); // -1, 0 or 1 while an arrow key is down
   const heldFor = useRef(0);
   const auto = useRef(false);
+  const rest = useRef(0); // seconds left to linger at a milestone while playing
+  const nextStop = useRef(0);
   const target = useRef<number | null>(null);
   const reduced = useRef(false);
   const drag = useRef<{ x: number; p: number } | null>(null);
@@ -467,10 +539,22 @@ export function LifeLine() {
         target.current = null;
         want = held.current * lerp(1, 2.4, smooth(heldFor.current / 1.6));
       } else if (auto.current) {
-        want = PLAY;
-        if (pos.current >= LAST) {
-          auto.current = false;
-          setPlaying(false);
+        // Playing lingers at each milestone long enough to read it, then moves on.
+        const left = nextStop.current - pos.current;
+        if (rest.current > 0) {
+          rest.current -= dt;
+        } else if (left < 0.004) {
+          pos.current = nextStop.current;
+          vel.current = 0;
+          if (nextStop.current >= LAST) {
+            auto.current = false;
+            setPlaying(false);
+          } else {
+            rest.current = Math.min(3.6, 1.3 + milestones[nextStop.current].note.length * 0.022);
+            nextStop.current += 1;
+          }
+        } else {
+          want = PLAY * Math.min(1, left * 5 + 0.06);
         }
       } else if (target.current !== null) {
         const d = target.current - pos.current;
@@ -578,7 +662,7 @@ export function LifeLine() {
   const ground: string[] = [];
   for (let x = Math.floor((x0 - centre) / 24) * 24 - 24; x <= x0 + centre + 24; x += 24) ground.push(`${ground.length ? "L" : "M"}${x} ${(GROUND + hill(x)).toFixed(1)}`);
   const things = (sc: Scene, w: number, behind: boolean, key: string) =>
-    sc.items?.filter((it) => BEHIND.has(it.g) === behind).map((it, n) => <Thing key={key + n} item={it} w={w * dim} />);
+    sc.items?.filter((it) => BEHIND.has(it.g) === behind).map((it, n) => <Thing key={key + n} item={it} w={w * dim} flip={turn < 0 ? -1 : 1} />);
 
   return (
     <div ref={root}>
@@ -637,9 +721,9 @@ export function LifeLine() {
             </g>
             {!still &&
               hellos.map((g) => {
-                const o = smooth((0.3 - Math.abs(p - g.at)) / 0.12);
+                const o = smooth((0.24 - Math.abs(p - g.at)) / 0.1);
                 return o > 0 ? (
-                  <g key={g.language} transform={`translate(${(head[0] * turn + 16).toFixed(1)} ${(head[1] - d.r - 10).toFixed(1)}) scale(${1 / ZOOM})`}>
+                  <g key={g.language} transform={`translate(${(head[0] * turn + d.r + 3).toFixed(1)} ${(head[1] - d.r * 0.7).toFixed(1)}) scale(${1 / ZOOM})`}>
                     <Bubble text={g.hello} opacity={o} />
                   </g>
                 ) : null;
@@ -663,6 +747,8 @@ export function LifeLine() {
                   if (playing) return stopPlay();
                   if (pos.current >= LAST - 0.01) set(0);
                   target.current = null;
+                  rest.current = 0;
+                  nextStop.current = Math.min(LAST, Math.floor(pos.current + 0.001) + 1);
                   auto.current = true;
                   setPlaying(true);
                 }}
