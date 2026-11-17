@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { milestones } from "@/content/life";
+import { BIRTH_YEAR, milestones, type Prop } from "@/content/life";
 
 /*
  * A walkable biography. The figure stays in the middle and the timeline moves under it; hold the arrow keys,
@@ -11,7 +11,7 @@ import { milestones } from "@/content/life";
  */
 
 const LAST = milestones.length - 1;
-const SPEED = 1.15; // milestones per second while a key is held
+const SPEED = 1.6; // milestones per second while a key is held
 const H = 230;
 const GROUND = 178;
 const clamp = (n: number) => Math.max(0, Math.min(LAST, n));
@@ -30,7 +30,53 @@ function heightAt(age: number) {
 
 function ageAt(p: number) {
   const i = Math.min(LAST - 1, Math.floor(p));
-  return lerp(milestones[i].figureAge, milestones[i + 1].figureAge, p - i);
+  return lerp(milestones[i].year, milestones[i + 1].year, p - i) - BIRTH_YEAR;
+}
+
+/* One small line drawing per kind of milestone, in a 24 x 24 box whose bottom edge is the ground. */
+function PropGlyph({ kind }: { kind: Prop }) {
+  switch (kind) {
+    case "cradle":
+      return <><path d="M3 12h18l-2 8H5z" /><path d="M2 24c3-3 17-3 20 0" /><path d="M3 12c0-5 4-7 8-7" /></>;
+    case "ball":
+      return <><circle cx="12" cy="15" r="8.5" /><path d="M12 10.5l4.3 3.1-1.6 5h-5.4l-1.6-5z" /></>;
+    case "controller":
+      return <><rect x="2" y="11" width="20" height="11" rx="4" /><path d="M7 14.5v4M5 16.5h4" /><circle cx="16" cy="15.5" r="0.9" /><circle cx="18.5" cy="18" r="0.9" /></>;
+    case "keys":
+      return <><rect x="2" y="9" width="20" height="14" /><path d="M7 9v14M12 9v14M17 9v14" /><path d="M5.5 9v8h3V9M10.5 9v8h3V9M15.5 9v8h3V9" /></>;
+    case "book":
+      return <><path d="M12 9c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V8c-3-1-6-1-9 1z" /><path d="M12 9v14" /></>;
+    case "cube":
+      return <><rect x="4" y="7" width="16" height="16" /><path d="M9.3 7v16M14.7 7v16M4 12.3h16M4 17.7h16" /></>;
+    case "note":
+      return <><ellipse cx="7" cy="20" rx="3.5" ry="2.6" /><ellipse cx="18" cy="17" rx="3.5" ry="2.6" /><path d="M10.5 20V6l11-3v14" /><path d="M10.5 10l11-3" /></>;
+    case "cards":
+      return <><rect x="4" y="8" width="11" height="15" rx="1.5" transform="rotate(-10 9.5 15.5)" /><rect x="10" y="7" width="11" height="15" rx="1.5" transform="rotate(10 15.5 14.5)" /></>;
+    case "badge":
+      return <><path d="M12 4l7 3v7c0 5-3.5 8-7 9.5C8.500 22 5 19 5 14V7z" /><path d="M9 13.500l2.200 2.200 4-4.500" /></>;
+    case "stage":
+      return <><path d="M2 5h20v18" /><path d="M2 5v18" /><path d="M2 5c2 6 2 10 5 13M22 5c-2 6-2 10-5 13" /><path d="M1 23h22" /></>;
+    case "cap":
+      return <><path d="M1 12l11-5 11 5-11 5z" /><path d="M6 14.500v5c3 2.500 9 2.500 12 0v-5" /><path d="M23 12v7" /></>;
+    case "globe":
+      return <><circle cx="12" cy="14" r="9" /><path d="M3 14h18M12 5c-4 3-4 15 0 18M12 5c4 3 4 15 0 18" /></>;
+    case "chalk":
+      return <><rect x="2" y="6" width="20" height="13" /><path d="M6 11h7M6 14.500h11" /><path d="M8 19l-2 5M16 19l2 5" /></>;
+    case "shoe":
+      return <><path d="M2 15v6h20c0-3-3-4-7-5l-4-4c-1 2-4 3-9 3z" /><path d="M2 18.500h20" /></>;
+    case "house":
+      return <><path d="M3 23V12l9-7 9 7v11z" /><path d="M10 23v-6h4v6" /></>;
+    case "dance":
+      return <><circle cx="8" cy="7" r="2.300" /><circle cx="16" cy="7" r="2.300" /><path d="M8 9.500v7l-3 6.500M8 16.500l3 6.500M16 9.500v7l-3 6.500M16 16.500l3 6.500" /><path d="M8 11.500h8" /></>;
+    case "briefcase":
+      return <><rect x="2" y="10" width="20" height="13" rx="1.500" /><path d="M8.500 10V7h7v3M2 16h20" /></>;
+    case "trophy":
+      return <><path d="M7 4h10v6c0 3.500-2.200 6-5 6s-5-2.500-5-6z" /><path d="M7 6H3c0 4 2 6 4.500 6M17 6h4c0 4-2 6-4.500 6" /><path d="M12 16v4M8 23h8M9 20h6" /></>;
+    case "laptop":
+      return <><rect x="4" y="8" width="16" height="11" rx="1" /><path d="M1 23h22l-2-4H3z" /></>;
+    case "flag":
+      return <><path d="M5 23V3" /><path d="M5 4h14l-3.500 4.500L19 13H5" /></>;
+  }
 }
 
 function Figure({ age, phase, facing }: { age: number; phase: number; facing: 1 | -1 }) {
@@ -229,11 +275,21 @@ export function LifeLine() {
                   <line x1={x} x2={x} y1="52" y2={GROUND} stroke={on ? "var(--accent)" : "var(--rule)"} strokeWidth="1" strokeDasharray="2 4" />
                   <circle cx={x} cy={GROUND} r="4" fill={on ? "var(--accent)" : "var(--bg)"} stroke={on ? "var(--accent)" : "var(--ink)"} strokeWidth="1.5" />
                   <text x={x} y="26" textAnchor="middle" fontSize="10" letterSpacing="0.08em" fill={on ? "var(--accent-text)" : "var(--muted)"} fontFamily="var(--font-mono)">
-                    {String(i + 1).padStart(2, "0")}{m.when ? ` · ${m.when.toUpperCase()}` : ""}
+                    {m.when.toUpperCase()}
                   </text>
                   <text x={x} y="44" textAnchor="middle" fontSize="13" fill={on ? "var(--ink)" : "var(--muted)"} fontFamily="var(--font-sans)">
                     {m.title}
                   </text>
+                  <g
+                    transform={`translate(${x + 26} ${GROUND - 35}) scale(1.4)`}
+                    fill="none"
+                    stroke={on ? "var(--accent)" : "var(--muted)"}
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <PropGlyph kind={m.prop} />
+                  </g>
                   <text x={x} y={GROUND + 28} textAnchor="middle" fontSize="10" fill="var(--muted)" fontFamily="var(--font-mono)">
                     {String(i + 1).padStart(2, "0")}
                   </text>
@@ -248,10 +304,10 @@ export function LifeLine() {
       </div>
 
       <div className="mt-5 grid gap-5 sm:grid-cols-12 sm:gap-8">
-        <div aria-live="polite" className="min-h-[6.5rem] sm:col-span-7">
+        <div aria-live="polite" className="min-h-[9.5rem] sm:col-span-7">
           <p className="meta">
             <span className="text-accent-text">{String(nearest + 1).padStart(2, "0")}</span> / {String(LAST + 1).padStart(2, "0")}
-            {current.when && ` · ${current.when}`}
+            {` · ${current.when}`}
           </p>
           <p className="mt-2 font-display text-2xl leading-tight tracking-[-0.01em]">{current.title}</p>
           <p className="mt-2 max-w-[52ch] text-[0.9375rem] leading-snug text-muted">{current.note}</p>
