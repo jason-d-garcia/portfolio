@@ -14,8 +14,9 @@ export default function AboutPage() {
   return (
     <article className="frame pt-14 pb-28 sm:pt-20">
       <p className="meta">About</p>
-      <h1 className="mt-5 max-w-[17ch] text-[clamp(2.5rem,1.4rem+5vw,5.5rem)] leading-[0.95] tracking-[-0.035em]">
-        A builder with a math degree <span className="voice text-accent-text">and a piano habit.</span>
+      <h1 className="mt-5 max-w-[20ch] text-[clamp(2.25rem,1.3rem+4.4vw,5rem)] leading-[0.97] tracking-[-0.035em]">
+        Trained in mathematics and computer science,{" "}
+        <span className="voice text-accent-text">with an artist&rsquo;s instincts and a teacher&rsquo;s reasons.</span>
       </h1>
 
       <div className="mt-12 grid gap-8 sm:mt-16 sm:grid-cols-12">
