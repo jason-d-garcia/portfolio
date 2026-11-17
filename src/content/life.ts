@@ -40,3 +40,11 @@ export const milestones: Milestone[] = [
 ];
 
 export const BIRTH_YEAR = 2001.3;
+
+/* A greeting in each language, shown as a speech bubble at the year Jason started learning it. */
+export const greetings = [
+  { language: "Spanish", hello: "¡Hola!", year: 2016.5 },
+  { language: "German", hello: "Hallo!", year: 2018.4 },
+  { language: "Russian", hello: "Привет!", year: 2020.45 },
+  { language: "Italian", hello: "Ciao!", year: 2021.3 },
+];
