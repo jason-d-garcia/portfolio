@@ -21,6 +21,7 @@
   --hue-tiktok: #2b50d6;
   --hue-vgc: #4f7419;
   --hue-ballroom: #8a3566;
+  --hue-harness: #1d6b73;
 
   color-scheme: light;
 }
@@ -42,6 +43,7 @@
     --hue-tiktok: #8aa4ff;
     --hue-vgc: #a9d15c;
     --hue-ballroom: #de8fbb;
+    --hue-harness: #6cc4cc;
     color-scheme: dark;
   }
 }
@@ -60,6 +62,7 @@
   --hue-tiktok: #8aa4ff;
   --hue-vgc: #a9d15c;
   --hue-ballroom: #de8fbb;
+  --hue-harness: #6cc4cc;
   color-scheme: dark;
 }
 

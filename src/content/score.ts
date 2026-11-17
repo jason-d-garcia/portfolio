@@ -27,6 +27,7 @@ export type ScoreEntry = {
 
 export const scoreEntries: ScoreEntry[] = [
   { name: "senti", group: "Projects", lines: [0, 3, 4], built: true, note: "A map of 5,411 songs you browse by feeling, placed by a lyrics and audio model.", href: "/projects/moodify" },
+  { name: "Coding-agent harness", group: "Projects", lines: [0, 1, 3], built: true, note: "Internship: a better harness for AI coding agents, and a blinded pilot of how they should clarify requirements.", href: "/projects/coding-agent-harness" },
   { name: "TikTok forecasting", group: "Projects", lines: [0, 1, 3], built: true, note: "What beats a creator's own norm, with intervals that say how sure the forecast is.", href: "/projects/tiktok-conformal" },
   { name: "VGC team generation", group: "Projects", lines: [2, 3], built: true, note: "A search for Pokémon teams that are strong and different from each other. Engine built; search results still to come.", href: "/projects/vgc-team-generation" },
   { name: "Ballroom style finder", group: "Projects", lines: [0, 4, 5], built: true, note: "Listens to 30 seconds of a song and names the ballroom dances it fits.", href: "/projects/ballroom" },

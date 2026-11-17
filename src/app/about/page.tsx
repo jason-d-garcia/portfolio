@@ -52,7 +52,7 @@ export default function AboutPage() {
         <LifeLine />
       </section>
 
-      <section className="mt-20 grid gap-4 border-t border-ink pt-4 sm:mt-28 sm:grid-cols-12 sm:gap-8">
+      <section id="values" className="mt-20 scroll-mt-6 grid gap-4 border-t border-ink pt-4 sm:mt-28 sm:grid-cols-12 sm:gap-8">
         <h2 className="meta sm:col-span-3">What matters</h2>
         <div className="sm:col-span-9">
           <p className="max-w-[30ch] font-display text-[clamp(1.75rem,1.2rem+2.2vw,3rem)] leading-[1.08] tracking-[-0.025em]">

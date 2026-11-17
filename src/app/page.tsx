@@ -5,14 +5,34 @@ import { SectionHead } from "@/components/SectionHead";
 import { StatusBadge } from "@/components/StatusBadge";
 import { explorations } from "@/content/explorations";
 import { profile } from "@/content/profile";
-import { projects } from "@/content/projects";
-import { values, valuesLead } from "@/content/values";
+import { featuredProjects } from "@/content/projects";
 
-const pursuits = [
-  { name: "Music", body: "Piano, voice, composing and arranging. I came close to majoring in piano performance.", href: "/beyond#music" },
-  { name: "Ballroom", body: "Competitive dancing, and running rehearsals for a showcase company.", href: "/beyond#dance" },
-  { name: "Mathematics", body: "My first degree. I like knowing why an algorithm works, not only how to call it.", href: "/beyond#interests" },
-  { name: "Languages", body: "Spanish and Italian, some German and Russian, and an interest in how languages work.", href: "/beyond#interests" },
+// Short teasers for the sections that have their own page. The full text lives there.
+const teasers = [
+  {
+    title: "Current explorations",
+    body: `${explorations.length} ideas and unfinished experiments, from a VGC paper in preparation to a tutor that notices how students see themselves.`,
+    href: "/explorations",
+    link: "All explorations",
+  },
+  {
+    title: "Beyond the code",
+    body: "Music, ballroom, mathematics and languages, each one a way of thinking.",
+    href: "/beyond",
+    link: "Beyond the code",
+  },
+  {
+    title: "What matters",
+    body: "Technology is a means. The point is who it helps: service, stewardship, honesty and learning.",
+    href: "/about#values",
+    link: "What matters",
+  },
+  {
+    title: "About",
+    body: "MS Computer Science at BYU (Dec 2027), data science intern, teaching since 2020. Looking for a Summer 2027 ML internship.",
+    href: "/about",
+    link: "More about me",
+  },
 ];
 
 const arrow = "transition-transform duration-300 group-hover:translate-x-1";
@@ -44,6 +64,38 @@ export default function Home() {
         </div>
       </section>
 
+      <section id="work" className="frame scroll-mt-6 pt-14 sm:pt-20">
+        <SectionHead index="01" title="Selected work">
+          <p className="max-w-[46ch] font-display text-[clamp(1.375rem,1.15rem+0.9vw,1.875rem)] leading-[1.1] tracking-[-0.02em]">
+            Four projects, each with the figure, the number and the catch.
+          </p>
+        </SectionHead>
+        <ol className="mt-8 grid gap-x-8 gap-y-12 sm:mt-10 sm:grid-cols-2 sm:gap-y-14">
+          {featuredProjects.map((p, i) => (
+            <li key={p.slug} data-reveal style={{ "--hue": projectHue(p.slug) } as React.CSSProperties}>
+              <Link href={`/projects/${p.slug}`} className="group block">
+                <ProjectFigure slug={p.slug} compact />
+                <p className="meta mt-5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <span className="text-hue">{String(i + 1).padStart(2, "0")}</span>
+                  <StatusBadge project={p} />
+                </p>
+                <h3 className="mt-2 font-display text-[clamp(1.625rem,1.3rem+1.2vw,2.25rem)] leading-none font-medium tracking-[-0.03em] group-hover:text-accent-text">
+                  {p.name}
+                </h3>
+                <p className="mt-3 text-[1.0625rem] leading-snug">{p.tagline}</p>
+                {p.result && <p className="mt-2 text-[0.9375rem] leading-snug text-muted">{p.result}</p>}
+                <p className="mt-3 text-[0.9375rem]">
+                  <span className="link">Read the write-up</span> <span aria-hidden className={`inline-block ${arrow}`}>→</span>
+                </p>
+              </Link>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-10">
+          <Link href="/projects" className="link">All projects →</Link>
+        </p>
+      </section>
+
       <section aria-labelledby="score-title" className="frame pt-16 sm:pt-24">
         <div className="mb-8 grid gap-2 sm:grid-cols-12 sm:gap-8">
           <h2 id="score-title" className="meta sm:col-span-3">The work, as a score</h2>
@@ -56,111 +108,22 @@ export default function Home() {
         <Score />
       </section>
 
-      <section id="work" className="frame scroll-mt-6 pt-24 sm:pt-36">
-        <SectionHead index="01" title="Selected work">
-          <p className="max-w-[46ch] font-display text-[clamp(1.5rem,1.2rem+1.2vw,2.25rem)] leading-[1.1] tracking-[-0.02em]">
-            Four projects, each with the figure, the number and the catch.
-          </p>
-        </SectionHead>
-        <ol className="mt-12 space-y-20 sm:mt-20 sm:space-y-32">
-          {projects.map((p, i) => (
-            <li key={p.slug} data-reveal style={{ "--hue": projectHue(p.slug) } as React.CSSProperties}>
-              <Link href={`/projects/${p.slug}`} className="group grid items-end gap-6 sm:grid-cols-12 sm:gap-8">
-                <ProjectFigure
-                  slug={p.slug}
-                  className={i % 2 ? "sm:order-2 sm:col-span-6 sm:col-start-7" : "sm:col-span-7"}
-                />
-                <div className={i % 2 ? "sm:order-1 sm:col-span-5 sm:row-start-1" : "sm:col-span-5"}>
-                  <p className="meta flex flex-wrap items-center gap-x-3 gap-y-1">
-                    <span className="text-hue">{String(i + 1).padStart(2, "0")}</span>
-                    <StatusBadge project={p} />
-                  </p>
-                  <h3 className="mt-3 font-display text-[clamp(2rem,1.4rem+2.4vw,3.5rem)] leading-none font-medium tracking-[-0.03em]">
-                    {p.name}
-                  </h3>
-                  <p className="mt-4 text-[1.0625rem] leading-snug">{p.tagline}</p>
-                  {p.result && <p className="mt-3 text-[0.9375rem] leading-snug text-muted">{p.result}</p>}
-                  <p className="mt-5 text-[0.9375rem]">
-                    <span className="link">Read the write-up</span> <span aria-hidden className={`inline-block ${arrow}`}>→</span>
-                  </p>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className="frame pt-24 sm:pt-36">
-        <SectionHead index="02" title="Current explorations">
-          <p className="max-w-[46ch] font-display text-[clamp(1.5rem,1.2rem+1.2vw,2.25rem)] leading-[1.1] tracking-[-0.02em]">
-            Ideas and unfinished experiments, labelled as what they are.
-          </p>
-        </SectionHead>
-        <ul className="mt-10 sm:ml-[25%] sm:mt-14">
-          {explorations.map((e) => (
-            <li key={e.id} data-reveal className="border-b border-rule first:border-t">
-              <Link href={`/explorations#${e.id}`} className="group grid gap-1 py-4 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-8">
-                <span className="text-[1.125rem] leading-snug group-hover:text-accent-text">{e.question}</span>
-                <span className="meta">{e.stage}</span>
+      <section aria-label="More about me" className="frame py-16 sm:py-24">
+        <ul className="grid gap-x-8 gap-y-8 border-t border-ink pt-4 sm:grid-cols-2 lg:grid-cols-4">
+          {teasers.map((t, i) => (
+            <li key={t.title} data-reveal>
+              <Link href={t.href} className="group block">
+                <span className="meta block">
+                  <span className="text-accent-text">{String(i + 2).padStart(2, "0")}</span> / {t.title}
+                </span>
+                <span className="mt-3 block text-[0.9375rem] leading-snug text-muted">{t.body}</span>
+                <span className="mt-3 block text-[0.9375rem]">
+                  <span className="link">{t.link}</span> <span aria-hidden className={`inline-block ${arrow}`}>→</span>
+                </span>
               </Link>
             </li>
           ))}
         </ul>
-        <p className="mt-6 sm:ml-[25%]">
-          <Link href="/explorations" className="link">All explorations →</Link>
-        </p>
-      </section>
-
-      <section className="frame pt-24 sm:pt-36">
-        <SectionHead index="03" title="Beyond the code">
-          <p className="max-w-[46ch] font-display text-[clamp(1.5rem,1.2rem+1.2vw,2.25rem)] leading-[1.1] tracking-[-0.02em]">
-            Music, dance, mathematics and languages, <span className="voice">each one a way of thinking.</span>
-          </p>
-        </SectionHead>
-        <ul className="mt-10 grid gap-x-8 gap-y-8 sm:mt-14 sm:grid-cols-12">
-          {pursuits.map((p, i) => (
-            <li key={p.name} data-reveal className={`sm:col-span-3 ${i % 2 ? "sm:mt-10" : ""}`}>
-              <Link href={p.href} className="group block border-t border-rule pt-3">
-                <span className="block font-display text-2xl tracking-[-0.02em] group-hover:text-accent-text">{p.name}</span>
-                <span className="mt-2 block text-[0.9375rem] leading-snug text-muted">{p.body}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-24 bg-surface sm:mt-36">
-        <div className="frame py-20 sm:py-28">
-          <SectionHead index="04" title="What matters">
-            <p data-reveal className="max-w-[30ch] font-display text-[clamp(1.75rem,1.2rem+2.2vw,3rem)] leading-[1.08] tracking-[-0.025em]">
-              Technology is a means. <span className="voice">The point is who it helps.</span>
-            </p>
-            <p className="mt-6 max-w-[58ch] text-[1.0625rem] leading-snug">{valuesLead}</p>
-            <dl className="mt-12 grid gap-x-8 gap-y-8 sm:grid-cols-2">
-              {values.map((v) => (
-                <div key={v.name} data-reveal>
-                  <dt className="meta text-ink">{v.name}</dt>
-                  <dd className="mt-2 max-w-[44ch] text-[0.9375rem] leading-snug text-muted">{v.body}</dd>
-                </div>
-              ))}
-            </dl>
-          </SectionHead>
-        </div>
-      </section>
-
-      <section className="frame py-24 sm:py-36">
-        <SectionHead index="05" title="About">
-          <p className="max-w-[60ch] text-[clamp(1.125rem,1rem+0.6vw,1.5rem)] leading-snug">
-            I&rsquo;m finishing an MS in Computer Science at BYU in December 2027, after a BS in Mathematics. I&rsquo;ve taught
-            math and programming at Juni Learning since 2020, and I&rsquo;m a data science intern at The Church of Jesus Christ
-            of Latter-day Saints. I&rsquo;m looking for a Summer 2027 internship in applied ML, especially on teams building
-            for learners.
-          </p>
-          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
-            <li><Link href="/about" className="link">More about me →</Link></li>
-            <li><Link href="/resume" className="link">Resume →</Link></li>
-          </ul>
-        </SectionHead>
       </section>
     </>
   );

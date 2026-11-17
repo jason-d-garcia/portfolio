@@ -82,6 +82,42 @@ function BallroomFigure() {
   );
 }
 
+// Spread of hidden-test scores across runs, per method. The numbers are the pilot's reported ranges.
+function HarnessFigure() {
+  const MIN = 30;
+  const MAX = 70;
+  const W = 320;
+  const L = 92;
+  const x = (v: number) => L + ((v - MIN) / (MAX - MIN)) * (W - L - 8);
+  const rows = [
+    { name: "Example cards", lo: 54, hi: 59, main: true },
+    { name: "COSPEC-style", lo: 39, hi: 62, main: false },
+  ];
+  const H = 96;
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Range of hidden-test scores across runs. Example cards: 54 to 59 percent. COSPEC-style: 39 to 62 percent." className="block w-full">
+      {[30, 40, 50, 60, 70].map((t) => (
+        <g key={t}>
+          <line x1={x(t)} x2={x(t)} y1="4" y2={H - 18} stroke="var(--rule)" strokeWidth="0.75" />
+          <text x={x(t)} y={H - 5} textAnchor="middle" fontSize="8" fill="var(--muted)" fontFamily="var(--font-mono)">{t}%</text>
+        </g>
+      ))}
+      {rows.map((r, i) => {
+        const cy = 24 + i * 32;
+        const color = r.main ? "var(--hue)" : "var(--muted)";
+        return (
+          <g key={r.name}>
+            <text x="0" y={cy + 3} fontSize="8.5" fill={r.main ? "var(--ink)" : "var(--muted)"} fontFamily="var(--font-mono)">{r.name}</text>
+            <line x1={x(r.lo)} x2={x(r.hi)} y1={cy} y2={cy} stroke={color} strokeWidth="7" strokeLinecap="round" />
+            <text x={x(r.lo) - 6} y={cy + 3} textAnchor="end" fontSize="7.5" fill="var(--muted)" fontFamily="var(--font-mono)">{r.lo}</text>
+            <text x={x(r.hi) + 6} y={cy + 3} fontSize="7.5" fill="var(--muted)" fontFamily="var(--font-mono)">{r.hi}</text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 // The MAP-Elites archive, drawn empty on purpose: the search has not run at scale, so there is nothing to plot.
 function VgcFigure() {
   const cols = 12;
@@ -121,6 +157,11 @@ const figures: Record<string, { hue: string; caption: string; node: () => React.
     caption: "Method sketch, not a result. The archive keeps one best team per play style, and it is empty until the search runs.",
     node: VgcFigure,
   },
+  "coding-agent-harness": {
+    hue: "var(--hue-harness)",
+    caption: "Spread of scores on a hidden 61-case test suite, 16 blinded runs in matched pairs. Mean correctness was the same: 55.5% vs 54.9%.",
+    node: HarnessFigure,
+  },
   ballroom: {
     hue: "var(--hue-ballroom)",
     caption: "Accuracy on 618 held-out clips, same split for every model.",
@@ -131,12 +172,16 @@ const figures: Record<string, { hue: string; caption: string; node: () => React.
 export const hasFigure = (slug: string) => slug in figures;
 export const projectHue = (slug: string) => figures[slug]?.hue ?? "var(--accent)";
 
-export function ProjectFigure({ slug, className = "" }: { slug: string; className?: string }) {
+// `compact` is the shorter frame used for the home page's selected work.
+export function ProjectFigure({ slug, className = "", compact = false }: { slug: string; className?: string; compact?: boolean }) {
   const f = figures[slug];
   if (!f) return null;
+  const frame = compact
+    ? "aspect-[4/3] p-4 sm:aspect-[16/9] sm:p-5 [&>svg]:max-h-full"
+    : "aspect-[4/3] p-5 sm:p-8";
   return (
     <figure className={`m-0 ${className}`} style={{ "--hue": f.hue } as React.CSSProperties}>
-      <div className="flex aspect-[4/3] items-center justify-center bg-surface p-5 sm:p-8">{f.node()}</div>
+      <div className={`flex items-center justify-center overflow-hidden bg-surface ${frame}`}>{f.node()}</div>
       <figcaption className="mt-2.5 font-mono text-[0.6875rem] leading-snug text-muted">{f.caption}</figcaption>
     </figure>
   );

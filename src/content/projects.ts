@@ -221,6 +221,97 @@ const allProjects: Project[] = [
       "Extended Ballroom dataset (Marchand & Peeters, 2016). MERT-v1-95M (m-a-p). Audio is never stored in the repo.",
   },
   {
+    slug: "coding-agent-harness",
+    name: "Coding-agent harness",
+    tagline: "A better harness for AI coding agents on a team new to them, and a blinded test of what makes their output reliable.",
+    status: "in-progress",
+    statusNote: "Internship",
+    accent: "var(--accent)",
+    tags: ["AI coding agents", "Experiment design", "LLM evaluation", "Python"],
+    demoUrl: "",
+    repoUrl: "",
+    result: "Blinded pilot, 16 runs: example cards kept scores within 54-59% vs 39-62% for a COSPEC-style method, in a third fewer rounds at equal cost. Correctness was the same (55.5% vs 54.9%).",
+    problem:
+      "I'm a Data Science Intern at The Church of Jesus Christ of Latter-day Saints, in Meetinghouse & Facilities. The team I work with is hesitant to adopt AI, and fairly so: an agent that writes plausible code that misses the point costs time. I'm building a better harness for AI coding agents and measuring whether it actually saves the team time. The first question was what limits an agent's output on the team's real work, so I ran a measured pilot on how the agent clarifies requirements before it writes code.",
+    exists: [
+      "A test harness that runs a coding agent (Claude) through a requirement-clarification method on a historical team task, one where a person had to clarify the requirements, under a fixed compute budget.",
+      "A reproducible adaptation of a published spec-clarification method (COSPEC), and an alternative \"example card\" method that pins requirements down as concrete examples. I fixed a gate and budget deadlock in the example-card tooling before freezing the protocol.",
+      "A preregistered, blinded pilot: 16 agent runs in matched pairs, each scored blind against a hidden 61-case test suite. No infrastructure failures, at about $11 and 36 minutes per run.",
+    ],
+    approach: [
+      {
+        title: "Clarify before coding",
+        body: "An agent can only build what it has been told. Both methods have the agent ask about the requirements before it writes code; they differ in how the answers are captured.",
+      },
+      {
+        title: "Two methods, matched pairs",
+        body: "A COSPEC-style method, adapted from published work on spec clarification, against example cards. Each pair ran the same task under the same budget, so differences come from the method, not the task.",
+      },
+      {
+        title: "Preregistered and blinded",
+        body: "The analysis was written down before any runs. Every run was scored against a hidden 61-case test suite by a blinded LLM judge, with multiple-comparison correction and documented deviations from the protocol.",
+      },
+    ],
+    architecture: [
+      "Historical task where a person had to clarify requirements",
+      "Clarification method (COSPEC-style or example cards)",
+      "Coding agent run under a fixed budget",
+      "Blind scoring against a hidden 61-case test suite",
+      "Preregistered paired analysis",
+    ],
+    findings: [
+      {
+        title: "Example cards made runs far more consistent",
+        body: "Example-card runs stayed within 54-59% of the hidden tests; COSPEC-style runs ranged from 39% to 62%. Example cards also converged in a third fewer rounds, at the same cost.",
+      },
+      {
+        title: "But not more correct",
+        body: "Mean correctness was the same for both methods, 55.5% vs 54.9%. Structured clarification makes runs more consistent, not more complete.",
+      },
+      {
+        title: "Unstated requirements were the limit",
+        body: "The main limit on the agents' output was requirements nobody had written down, not the quality of the code they wrote. That finding shaped the design of the follow-up experiment.",
+      },
+    ],
+    metrics: [
+      {
+        label: "Score range across runs",
+        value: "54–59% vs 39–62%",
+        source: "Share of a hidden 61-case test suite passed, example cards vs COSPEC-style. 16 runs in matched pairs, scored blind.",
+      },
+      {
+        label: "Mean correctness",
+        value: "55.5% vs 54.9%",
+        source: "Same runs and order. The pilot rules out a large difference between the methods, not a small one.",
+      },
+      {
+        label: "Rounds to converge",
+        value: "A third fewer",
+        source: "Example cards vs COSPEC-style, at equal cost per run.",
+      },
+      {
+        label: "Cost per run",
+        value: "~$11, 36 min",
+        source: "Average per agent run within a fixed compute budget. 16 runs, no infrastructure failures.",
+      },
+    ],
+    surprise: {
+      expected: "That a more structured way of clarifying requirements would make the agent's code more correct.",
+      happened:
+        "Correctness came out the same. Example cards made runs steadier and quicker to converge, but what held every run back was requirements nobody had stated, not the code itself.",
+    },
+    limitations: [
+      "A small pilot: one task and 8 matched pairs. It rules out a large difference between the methods, not a small one.",
+      "Passing a hidden test suite is a proxy for doing what the person wanted, and the pilot doesn't yet measure time saved.",
+      "Ticket contents, internal systems and code are confidential, so this page describes the method and the numbers only.",
+    ],
+    next: [
+      "Run the follow-up experiment, designed around surfacing unstated requirements.",
+      "Measure whether the harness saves the team time on real work, the question the team cares about.",
+      "Add more tasks, so a smaller difference between methods could be detected.",
+    ],
+  },
+  {
     slug: "vgc-team-generation",
     name: "VGC team generation",
     tagline: "Quality-diversity search for Pokémon doubles teams that are strong and different from each other.",
@@ -424,8 +515,11 @@ const allProjects: Project[] = [
 
 // Projects with real work behind them, in display order. Ideas with nothing built yet live on /explorations;
 // their pages still exist (see projectPages) so old links keep working.
-const order = ["moodify", "tiktok-conformal", "vgc-team-generation", "ballroom"];
+const order = ["moodify", "coding-agent-harness", "tiktok-conformal", "ballroom", "vgc-team-generation"];
 export const projects: Project[] = order.map((slug) => allProjects.find((p) => p.slug === slug)!);
+// The home page's selected work. Only projects with a measured result: no method sketch in a featured slot.
+const featured = ["moodify", "coding-agent-harness", "tiktok-conformal", "ballroom"];
+export const featuredProjects: Project[] = featured.map((slug) => allProjects.find((p) => p.slug === slug)!);
 export const projectPages: Project[] = allProjects;
 
 export const getProject = (slug: string) => allProjects.find((p) => p.slug === slug);

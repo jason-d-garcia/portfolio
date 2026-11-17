@@ -22,7 +22,7 @@ export default function ProjectsPage() {
         Things I built, <span className="voice text-accent-text">and what they showed.</span>
       </h1>
       <p className="mt-8 max-w-[56ch] text-[clamp(1.0625rem,1rem+0.45vw,1.3125rem)] leading-snug sm:ml-[25%]">
-        Two shipped and two in progress. Each write-up covers the problem, the approach, the results, and what didn&rsquo;t
+        Two shipped and three in progress. Each write-up covers the problem, the approach, the results, and what didn&rsquo;t
         work. Each number names the data it was measured on. Ideas with nothing built yet are on{" "}
         <Link href="/explorations" className="link">Explorations</Link>.
       </p>
