@@ -1,27 +1,33 @@
 import Link from "next/link";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { profile } from "@/content/profile";
 import { nav } from "@/lib/site";
 
 export function SiteHeader() {
   return (
-    <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-3 sm:h-16 sm:flex-nowrap sm:px-8 sm:py-0">
-      <Link href="/" className="text-xl font-medium tracking-tight whitespace-nowrap hover:text-accent-text">
-        {profile.name}
-      </Link>
-      <nav aria-label="Main" className="flex gap-3 text-base sm:gap-7">
-        {nav.map((n) => (
-          <Link key={n.href} href={n.href} className="underline-offset-4 hover:text-accent-text hover:underline">
-            {n.short ? (
-              <>
-                <span className="sm:hidden">{n.short}</span>
-                <span className="hidden sm:inline">{n.label}</span>
-              </>
-            ) : (
-              n.label
-            )}
-          </Link>
-        ))}
-      </nav>
+    <header className="border-b border-rule">
+      <div className="frame flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-3">
+        <Link href="/" className="font-display text-lg font-medium tracking-tight whitespace-nowrap hover:text-accent-text">
+          {profile.name}
+        </Link>
+        <div className="flex min-w-0 items-center gap-3 max-sm:w-full max-sm:justify-between">
+          <nav aria-label="Main" className="flex min-w-0 flex-wrap gap-x-3 gap-y-1 text-[0.875rem] sm:gap-x-6 sm:text-[0.9375rem]">
+            {nav.map((n) => (
+              <Link key={n.href} href={n.href} className="whitespace-nowrap underline-offset-4 hover:text-accent-text hover:underline">
+                {n.short ? (
+                  <>
+                    <span className="sm:hidden">{n.short}</span>
+                    <span className="hidden sm:inline">{n.label}</span>
+                  </>
+                ) : (
+                  n.label
+                )}
+              </Link>
+            ))}
+          </nav>
+          <ThemeToggle />
+        </div>
+      </div>
     </header>
   );
 }

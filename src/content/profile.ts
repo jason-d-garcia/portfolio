@@ -1,9 +1,9 @@
 // Single source of truth for personal details. Keep every claim here verifiable.
 export const profile = {
   name: "Jason Garcia",
-  headline: "I build human-centered machine learning and ship it as things people can use.",
+  headline: "Exploring ideas, building systems, and making things that matter.",
   summary:
-    "MS Computer Science student at BYU and longtime math and programming teacher. I work on applied ML (NLP, uncertainty quantification, computer vision) and care most about technology that expands opportunity for learners. Looking for Summer 2027 ML/AI internships, especially in education.",
+    "Jason Garcia works in machine learning, optimization and interactive software, informed by mathematics, music and teaching. MS Computer Science student at BYU, looking for a Summer 2027 internship in applied ML.",
   links: {
     github: "https://github.com/jason-d-garcia",
     linkedin: "https://www.linkedin.com/in/jasondgarcia1/",

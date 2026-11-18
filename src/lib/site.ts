@@ -3,13 +3,13 @@ import { join } from "node:path";
 
 export const siteUrl = process.env.SITE_URL ?? "https://jasondgarcia.com";
 
-// The resume link appears only once public/resume.pdf is added. Checked at build time.
+// The PDF download on /resume appears only once public/resume.pdf is added. Checked at build time.
 export const hasResume = existsSync(join(process.cwd(), "public", "resume.pdf"));
 
 export const nav: { label: string; short?: string; href: string }[] = [
   { label: "Projects", href: "/projects" },
-  { label: "Research", href: "/research" },
+  { label: "Explorations", short: "Explore", href: "/explorations" },
+  { label: "Beyond the Code", short: "Beyond", href: "/beyond" },
   { label: "About", href: "/about" },
-  ...(hasResume ? [{ label: "Resume", href: "/resume" }] : []),
-  { label: "Beyond work", short: "Beyond", href: "/beyond" },
+  { label: "Resume", href: "/resume" },
 ];
