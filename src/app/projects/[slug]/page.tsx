@@ -55,7 +55,7 @@ export default async function ProjectPage({ params }: Params) {
   const project = getProject((await params).slug);
   if (!project) notFound();
   const inProgress = project.status === "in-progress" || project.status === "concept";
-  const isSenti = project.slug === "moodify";
+  const isSenti = project.slug === "senti";
   const index = projects.findIndex((p) => p.slug === project.slug);
   const nextProject = index >= 0 ? projects[(index + 1) % projects.length] : undefined;
   const hasLinks = project.demoUrl || project.repoUrl || project.paperUrl || project.tool;

@@ -49,7 +49,7 @@ export type Project = {
 
 const allProjects: Project[] = [
   {
-    slug: "moodify",
+    slug: "senti",
     name: "senti",
     tagline: "Drag a point across a mood map and find songs that feel the way you do.",
     status: "live",
@@ -515,10 +515,10 @@ const allProjects: Project[] = [
 
 // Projects with real work behind them, in display order. Ideas with nothing built yet live on /explorations;
 // their pages still exist (see projectPages) so old links keep working.
-const order = ["moodify", "coding-agent-harness", "tiktok-conformal", "ballroom", "vgc-team-generation"];
+const order = ["senti", "coding-agent-harness", "tiktok-conformal", "ballroom", "vgc-team-generation"];
 export const projects: Project[] = order.map((slug) => allProjects.find((p) => p.slug === slug)!);
 // The home page's selected work. Only projects with a measured result: no method sketch in a featured slot.
-const featured = ["moodify", "coding-agent-harness", "tiktok-conformal", "ballroom"];
+const featured = ["senti", "coding-agent-harness", "tiktok-conformal", "ballroom"];
 export const featuredProjects: Project[] = featured.map((slug) => allProjects.find((p) => p.slug === slug)!);
 export const projectPages: Project[] = allProjects;
 

@@ -142,7 +142,7 @@ function VgcFigure() {
 }
 
 const figures: Record<string, { hue: string; caption: string; node: () => React.ReactNode }> = {
-  moodify: {
+  senti: {
     hue: "var(--hue-senti)",
     caption: `${songs.length} of the ${sample.catalogSize.toLocaleString("en-US")} songs on the live map, at the positions the model gave them.`,
     node: SentiFigure,

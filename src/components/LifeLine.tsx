@@ -119,9 +119,17 @@ const GLYPH: Record<string, ReactNode> = {
     </>
   ),
   cloud: <path d="M5 18a3.5 3.5 0 0 1 0.5-7 5 5 0 0 1 9.5-1 4 4 0 0 1 4 8z" strokeOpacity="0.55" />,
+  peaks: (
+    <>
+      <path d="M-2 23L6 9l3 4.5L13.5 4l6 12 2-2.5 5 9.5" strokeOpacity="0.6" />
+      <path d="M4.3 12l1.9 1.3 1.5-1.800M11.6 8l2.1 2.2 1.8-2.4" strokeOpacity="0.6" />
+    </>
+  ),
+  snow: <circle cx="12" cy="14" r="1.5" fill="var(--muted)" stroke="none" />,
+  confetti: <rect x="10" y="12.5" width="4" height="2.4" fill="var(--accent)" stroke="none" />,
   stool: <><path d="M9.5 14h5" /><path d="M10 14l-0.5 9M14 14l0.5 9" /></>,
 };
-const BEHIND = new Set(["curtain", "spot", "house", "stool", "cloud"]);
+const BEHIND = new Set(["curtain", "spot", "house", "stool", "cloud", "peaks"]);
 
 const stand = ({ A, L, T }: Dims): Pose => ({
   hip: [0, -L * 0.98],
@@ -162,6 +170,14 @@ function rising(t: number, x: number, y: number, glyphs: string[], text = false)
   return glyphs.map((g, k) => {
     const u = (t * 0.45 + k / glyphs.length) % 1;
     return { g, text, x: x + u * 20 + Math.sin(u * 6 + k * 2) * 4, y: y - u * 38, s: text ? 1 : 0.5, r: Math.sin(u * 5 + k) * 12, o: Math.sin(Math.PI * u) };
+  });
+}
+
+// Small things coming down from above: snow in Alaska, confetti after a win.
+function falling(t: number, g: string, count: number, top: number, speed: number, size: number): Item[] {
+  return Array.from({ length: count }, (_, k) => {
+    const u = (t * speed * (0.8 + rand(k, 3) * 0.5) + rand(k, 4)) % 1;
+    return { g, x: (rand(k, 5) - 0.5) * 150 + Math.sin(u * 5 + k) * 6, y: top * (1 - u) - 2, s: size, r: u * 300 * (rand(k, 6) - 0.5), o: Math.min(1, u * 5) * Math.min(1, (1 - u) * 4) };
   });
 }
 
@@ -212,10 +228,11 @@ function scene(kind: Prop, t: number, d: Dims): Scene {
       };
     }
     case "controller": {
+      // Alaska: on the floor with a controller, mountains behind and snow coming down.
       const x = A * 0.7, y = -3 - T + A * 0.6;
       return {
-        pose: { hip: [-4, -3], sh: [-6, -3 - T], ff: [L * 0.85, -1], fb: [L * 0.7, 0], hf: [x + 4, y + 2 + s(t * 8)], hb: [x - 4, y + 2 - s(t * 8)] },
-        items: [{ g: "controller", x, y, s: 0.6 }],
+        pose: { hip: [-4, -3], sh: [-6 + s(t * 1.3) * 1.5, -3 - T], ff: [L * 0.85, -1], fb: [L * 0.7, 0], hf: [x + 4, y + 2 + s(t * 8)], hb: [x - 4, y + 2 - s(t * 8)] },
+        items: [{ g: "peaks", x: 4, y: -9 * 5.4, s: 5.4 }, ...falling(t, "snow", 12, -120, 0.16, 1.2), { g: "controller", x, y, s: 0.6 }],
       };
     }
     case "book": {
@@ -351,8 +368,37 @@ function scene(kind: Prop, t: number, d: Dims): Scene {
       };
     }
     case "trophy": {
-      const y = head - r - 14 + s(t * 4) * 2;
-      return { pose: { ...st, hf: [5, y + 10], hb: [-5, y + 10] }, items: [{ g: "trophy", x: 0, y, s: 0.95 }] };
+      // The win: travelling in hold with a partner, then opening out to lift the trophy under confetti.
+      const u = (t * 0.22) % 1;
+      const c = smooth((u - 0.5) / 0.1) * (1 - smooth((u - 0.94) / 0.06));
+      const k = s(t * 2.8);
+      const drift = s(t * 1.4) * 9 * (1 - c);
+      const up = Math.max(0, k), dn = Math.max(0, -k);
+      const join: P = mix([4 + drift + k * 4, sy - A * 0.45], [3, sy + A * 0.75], c);
+      const cup: P = [-A * 0.55, sy - A * 0.85 + s(t * 5) * 2];
+      const hold: Pose = {
+        hip: [-10 + drift + k * 4, -L * 0.98],
+        sh: [-10 + drift + k * 6, sy],
+        hf: join,
+        hb: [15 + drift + k * 4, sy + A * 0.5],
+        ff: [-7 + drift + k * 6, -up * 5],
+        fb: [-13 + drift + k * 6, -dn * 5],
+      };
+      const open: Pose = { hip: [-12, -L * 0.98], sh: [-12, sy], hf: join, hb: cup, ff: [-9, 0], fb: [-15, 0] };
+      const herHold: Pose = {
+        hip: [17 + drift + k * 4, -L * 0.93],
+        sh: [17 + drift + k * 6, sy + 5],
+        hf: join,
+        hb: [-8 + drift + k * 6, sy + 5],
+        ff: [14 + drift + k * 6, -up * 5],
+        fb: [20 + drift + k * 6, -dn * 5],
+      };
+      const herOpen: Pose = { hip: [18, -L * 0.93], sh: [18, sy + 5], hf: join, hb: [18 + A * 0.7, sy - A * 0.5 + s(t * 5) * 2], ff: [15, 0], fb: [21, 0] };
+      return {
+        pose: mixPose(hold, open, c),
+        partner: mixPose(herHold, herOpen, c),
+        items: [...falling(t, "confetti", 14, -150, 0.3, 1.1).map((it) => ({ ...it, o: (it.o ?? 1) * c })), { g: "trophy", x: cup[0], y: cup[1] - 9, s: 0.9, o: c }],
+      };
     }
     case "laptop": {
       const seat = L * 0.72;

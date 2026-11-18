@@ -90,7 +90,7 @@ export default function BeyondPage() {
 
             <h3 className="meta mt-14">Where it meets the code</h3>
             <p className="mt-3 max-w-[60ch]">
-              Two projects started from music: <Link href="/projects/moodify" className="link">senti</Link>, a map of songs
+              Two projects started from music: <Link href="/projects/senti" className="link">senti</Link>, a map of songs
               arranged by how they feel, and the <Link href="/projects/ballroom" className="link">ballroom style finder</Link>,
               which names the dances a song fits. The <Link href="/" className="link">score on the home page</Link> draws
               everything on this site as chords you can play.
