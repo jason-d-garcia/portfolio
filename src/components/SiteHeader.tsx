@@ -11,7 +11,7 @@ export function SiteHeader() {
           {profile.name}
         </Link>
         <div className="flex min-w-0 items-center gap-3 max-sm:w-full max-sm:justify-between">
-          <nav aria-label="Main" className="flex min-w-0 flex-wrap gap-x-3 gap-y-1 text-[0.875rem] sm:gap-x-6 sm:text-[0.9375rem]">
+          <nav aria-label="Main" className="flex min-w-0 flex-wrap gap-x-2.5 gap-y-1 text-[0.8125rem] sm:gap-x-6 sm:text-[0.9375rem]">
             {nav.map((n) => (
               <Link key={n.href} href={n.href} className="whitespace-nowrap underline-offset-4 hover:text-accent-text hover:underline">
                 {n.short ? (
