@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LifeLine } from "@/components/LifeLine";
+import { PortraitHall } from "@/components/PortraitHall";
 import { Record } from "@/components/Record";
 import { influences } from "@/content/influences";
 import { profile } from "@/content/profile";
@@ -72,30 +73,14 @@ export default function AboutPage() {
       </section>
 
       {influences.length > 0 && (
-        <section id="influences" className="mt-20 scroll-mt-6 grid gap-4 border-t border-ink pt-4 sm:mt-28 sm:grid-cols-12 sm:gap-8">
-          <h2 className="meta sm:col-span-3">People I learned from</h2>
-          <ul className="sm:col-span-9">
-            {influences.map((p) => (
-              <li key={p.name} className="grid gap-x-8 gap-y-4 border-b border-rule py-6 first:pt-0 sm:grid-cols-9">
-                <div className="sm:col-span-3">
-                  <p className="font-display text-xl leading-tight tracking-[-0.01em]">{p.name}</p>
-                  <p className="meta mt-1 normal-case tracking-normal">{[p.field, p.years].filter(Boolean).join(" · ")}</p>
-                </div>
-                <div className="max-w-[58ch] sm:col-span-6">
-                  <figure>
-                    <blockquote className="voice text-[clamp(1.125rem,1rem+0.5vw,1.375rem)] leading-snug">&ldquo;{p.quote}&rdquo;</blockquote>
-                    <figcaption className="meta mt-2 normal-case tracking-normal">{p.source}</figcaption>
-                  </figure>
-                  <p className="mt-4 text-[0.9375rem] leading-snug text-muted">{p.why}</p>
-                  {p.link && (
-                    <p className="mt-3 text-[0.9375rem]">
-                      <Link href={p.link.href} className="link">{p.link.label} →</Link>
-                    </p>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
+        <section id="influences" aria-labelledby="influences-title" className="mt-20 scroll-mt-6 border-t border-ink pt-4 sm:mt-28">
+          <div className="mb-8 grid gap-2 sm:grid-cols-12 sm:gap-8">
+            <h2 id="influences-title" className="meta sm:col-span-3">People I learned from</h2>
+            <p className="max-w-[60ch] text-[0.9375rem] leading-snug text-muted sm:col-span-9">
+              A small portrait hall. Pick a frame for the line that stuck with me and the story behind it.
+            </p>
+          </div>
+          <PortraitHall />
         </section>
       )}
 
