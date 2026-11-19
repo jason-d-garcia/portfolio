@@ -9,6 +9,7 @@ export const hasResume = existsSync(join(process.cwd(), "public", "resume.pdf"))
 export const nav: { label: string; short?: string; href: string }[] = [
   { label: "Projects", href: "/projects" },
   { label: "Explorations", short: "Explore", href: "/explorations" },
+  { label: "Writing", href: "/writing" },
   { label: "Beyond the Code", short: "Beyond", href: "/beyond" },
   { label: "About", href: "/about" },
   { label: "Resume", href: "/resume" },

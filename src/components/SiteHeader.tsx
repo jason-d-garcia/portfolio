@@ -10,8 +10,10 @@ export function SiteHeader() {
         <Link href="/" className="font-display text-lg font-medium tracking-tight whitespace-nowrap hover:text-accent-text">
           {profile.name}
         </Link>
+        {/* On phones the toggle sits beside the name, so the six nav links fit on one line. */}
+        <div className="sm:hidden"><ThemeToggle /></div>
         <div className="flex min-w-0 items-center gap-3 max-sm:w-full max-sm:justify-between">
-          <nav aria-label="Main" className="flex min-w-0 flex-wrap gap-x-3 gap-y-1 text-[0.875rem] sm:gap-x-6 sm:text-[0.9375rem]">
+          <nav aria-label="Main" className="flex min-w-0 flex-wrap gap-x-2 gap-y-1 text-[0.8125rem] max-sm:w-full max-sm:justify-between sm:gap-x-6 sm:text-[0.9375rem]">
             {nav.map((n) => (
               <Link key={n.href} href={n.href} className="whitespace-nowrap underline-offset-4 hover:text-accent-text hover:underline">
                 {n.short ? (
@@ -25,7 +27,7 @@ export function SiteHeader() {
               </Link>
             ))}
           </nav>
-          <ThemeToggle />
+          <div className="max-sm:hidden"><ThemeToggle /></div>
         </div>
       </div>
     </header>

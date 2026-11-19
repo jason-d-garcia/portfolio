@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LifeLine } from "@/components/LifeLine";
+import { PortraitHall } from "@/components/PortraitHall";
 import { Record } from "@/components/Record";
+import { influences } from "@/content/influences";
 import { profile } from "@/content/profile";
 import { values, valuesLead } from "@/content/values";
 
@@ -69,6 +71,18 @@ export default function AboutPage() {
           </dl>
         </div>
       </section>
+
+      {influences.length > 0 && (
+        <section id="influences" aria-labelledby="influences-title" className="mt-20 scroll-mt-6 border-t border-ink pt-4 sm:mt-28">
+          <div className="mb-8 grid gap-2 sm:grid-cols-12 sm:gap-8">
+            <h2 id="influences-title" className="meta sm:col-span-3">People I learned from</h2>
+            <p className="max-w-[60ch] text-[0.9375rem] leading-snug text-muted sm:col-span-9">
+              A small portrait hall. Pick a frame for the line that stuck with me and the story behind it.
+            </p>
+          </div>
+          <PortraitHall />
+        </section>
+      )}
 
       <section className="mt-20 grid gap-4 border-t border-ink pt-4 sm:mt-28 sm:grid-cols-12 sm:gap-8">
         <h2 className="meta sm:col-span-3">What I&rsquo;m looking for</h2>
