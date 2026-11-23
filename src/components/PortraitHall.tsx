@@ -24,6 +24,36 @@ function EmblemArt({ kind }: { kind: Emblem }) {
       </svg>
     );
   }
+  if (kind === "book") {
+    return (
+      <svg viewBox="0 0 120 150" className="h-full w-full" aria-hidden>
+        <g stroke="var(--rule)" strokeWidth="1.5" strokeLinecap="round" fill="none">
+          <path d="M14 122h92M30 132h60" />
+        </g>
+        <path d="M60 50C48 42 32 40 18 44v60c14-4 30-2 42 6Z" fill="var(--ink)" />
+        <path d="M60 50c12-8 28-10 42-6v60c-14-4-30-2-42 6Z" fill="none" stroke="var(--ink)" strokeWidth="2.5" strokeLinejoin="round" />
+        <g stroke="var(--ink)" strokeWidth="1.5" strokeLinecap="round">
+          <path d="M70 60c8-4 16-5 24-4M70 72c8-4 16-5 24-4M70 84c8-4 16-5 24-4" />
+        </g>
+        <path d="M82 42v34l5-5 5 5V41Z" fill="var(--accent)" />
+      </svg>
+    );
+  }
+  if (kind === "hours") {
+    return (
+      <svg viewBox="0 0 120 150" className="h-full w-full" aria-hidden>
+        <g stroke="var(--rule)" strokeWidth="1.5" strokeLinecap="round" fill="none">
+          <path d="M14 128h92" />
+        </g>
+        <circle cx="60" cy="72" r="38" fill="none" stroke="var(--ink)" strokeWidth="2.5" />
+        {/* Nine to five, the long way round. */}
+        <path d="M30 72A30 30 0 1 1 75 98" fill="none" stroke="var(--accent)" strokeWidth="7" strokeLinecap="round" />
+        <path d="M60 72V50" stroke="var(--ink)" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M60 72l-16 0" stroke="var(--ink)" strokeWidth="7" strokeLinecap="round" />
+        <circle cx="60" cy="72" r="4" fill="var(--ink)" />
+      </svg>
+    );
+  }
   return (
     <svg viewBox="0 0 120 150" className="h-full w-full" aria-hidden>
       <g stroke="var(--rule)" strokeWidth="1.5" strokeLinecap="round" fill="none">
